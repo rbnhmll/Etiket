@@ -1,0 +1,890 @@
+{%- comment -%}
+{
+  "pack_name": "Slideshow - simple",
+  "pack_author": "Design Packs"
+}
+{%- endcomment -%}
+
+{% comment %} Security Code - hides section when app uninstalled {% endcomment %}
+{%- unless content_for_header contains 'design_packs_file.js' -%}
+  {%- if request.design_mode -%}
+    <div class="dsgn-pck__no-app-warning">
+      <div class="dsgn-pck__no-app-warning-background">
+      </div>
+      <div class="dsgn-pck__no-app-warning-text dsgn-pck__rte">
+        <p><strong>WARNING!</strong> This premium section will not display properly without an active subscription for <a href="https://apps.shopify.com/design-packs" target="_blank" rel="nofollow">Design Packs</a>. If you need any support please email <a href="mailto:info@design-packs.com" target="_blank">info@design-packs.com</a> with your questions.</p>
+      </div>
+    </div>
+  {%- endif -%}
+  {%- break -%}
+{%- endunless -%}
+
+{%- comment -%} Layout: has user entered measurement value into max-width field? {%- endcomment -%}
+{%- if section.settings.max_width contains 'px' or section.settings.max_width contains '%' -%}
+  {%- assign max_width = section.settings.max_width -%}
+{%- else -%}
+  {%- assign max_width = section.settings.max_width | append: 'px' -%}
+{%- endif -%}
+
+{%- comment -%} Text: custom font_picker values {%- endcomment -%}
+{%- capture font_settings_list -%}
+{{ section.settings.main_font | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'style', 'italic' | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'style', 'italic' | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}
+{%- endcapture -%}
+{%- assign font_array = font_settings_list | split: '~' -%}
+
+{%- comment -%} Text: scale sizes {%- endcomment -%}
+{%- capture text_scale -%}
+{%- if section.settings.text_size > 150 -%}
+  0.005
+{%- elsif section.settings.text_size > 140 -%}
+  0.006
+{%- elsif section.settings.text_size > 130 -%}
+  0.007
+{%- elsif section.settings.text_size > 120 -%}
+  0.008
+{%- elsif section.settings.text_size > 100 -%}
+  0.009
+{%- else -%}
+  0.01
+{%- endif -%}
+{%- endcapture -%}
+
+{%- capture minify -%}
+{%- comment -%} CSS {%- endcomment -%}
+<style>
+/*! Flickity v2.2.2
+https://flickity.metafizzy.co
+---------------------------------------------- */
+.flickity-enabled{position:relative}.flickity-enabled:focus{outline:0;box-shadow: none;}.flickity-viewport{overflow:hidden;position:relative;height:100%}.flickity-slider{position:absolute;width:100%;height:100%}.flickity-enabled.is-draggable{-webkit-tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.flickity-enabled.is-draggable .flickity-viewport{cursor:move;cursor:-webkit-grab;cursor:grab}.flickity-enabled.is-draggable .flickity-viewport.is-pointer-down{cursor:-webkit-grabbing;cursor:grabbing}.flickity-button{position:absolute;background:hsla(0,0%,100%,.75);border:none;color:#333}.flickity-button:hover{background:#fff;cursor:pointer}.flickity-button:focus{outline:0;box-shadow:0 0 0 5px #19f}.flickity-button:active{opacity:.6}.flickity-button:disabled{opacity:.3;cursor:auto;pointer-events:none}.flickity-button-icon{fill:currentColor}.flickity-prev-next-button{top:50%;width:44px;height:44px;border-radius:50%;transform:translateY(-50%)}.flickity-prev-next-button.previous{left:10px}.flickity-prev-next-button.next{right:10px}.flickity-rtl .flickity-prev-next-button.previous{left:auto;right:10px}.flickity-rtl .flickity-prev-next-button.next{right:auto;left:10px}.flickity-prev-next-button .flickity-button-icon{position:absolute;left:20%;top:20%;width:60%;height:60%}.flickity-page-dots{position:absolute;width:100%;bottom:-25px;padding:0;margin:0;list-style:none;text-align:center;line-height:1}.flickity-rtl .flickity-page-dots{direction:rtl}.flickity-page-dots .dot{display:inline-block;width:10px;height:10px;margin:0 8px;background:#333;border-radius:50%;opacity:.25;cursor:pointer}.flickity-page-dots .dot.is-selected{opacity:1}
+
+{%- if section.settings.override_theme_font != blank -%}
+  {%- for font in font_array -%}
+    {%- unless font contains 'error' -%}{{ font }}{%- endunless -%}
+  {%- endfor -%}
+  {%- capture main_font -%}{{ section.settings.main_font.family }}, {{ section.settings.main_font.fallback_families }}{%- endcapture -%}
+  {%- capture heading_font -%}{{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }}{%- endcapture -%}
+{%- endif -%}
+
+#DP--{{ section.id }} {
+  --slideshow-color: #FFFFFF;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: {{ max_width }};
+  margin-top: {{ section.settings.outer_margin_top }}px;
+  margin-bottom: {{ section.settings.outer_margin_bottom }}px;
+}
+
+#DP--{{ section.id }} .dsgn-pck__sizer {
+  width: 85%;
+}
+
+#DP--{{ section.id }} .dsgn-pck__background {
+  width: 100%;
+}
+
+#DP--{{ section.id }} .dsgn-pck__slide picture::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#DP--{{ section.id }} .dsgn-pck__slide {
+  width: 100%;
+}
+
+#DP--{{ section.id }} .dsgn-pck__grid {
+  height: 100%;
+}
+
+#DP--{{ section.id }} .dsgn-pck__content {
+  z-index: 2;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-area: 1 / 1 / 2 / 2;
+  padding: 5% 0;
+}
+
+#DP--{{ section.id }} .dsgn-pck__inner-content {
+  z-index: 2;
+  width: 100%;
+}
+
+#DP--{{ section.id }} .dsgn-pck__small-text {
+  margin-top: 0;
+  color: {{ section.settings.text_color }};
+  line-height: calc(3px + 2ex + 3px);
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.008 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: {{ main_font }};
+  font-weight: {{ section.settings.main_font.weight }};
+  font-style: {{ section.settings.main_font.style }};
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .dsgn-pck__heading {
+  color: {{ section.settings.text_color }};
+  line-height: calc(3px + 2ex + 3px);
+  font-size: calc(var(--dp-g-heading-size, var(--dp-heading-size, 35px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: {{ heading_font }};
+  font-weight: {{ section.settings.heading_font.weight }};
+  font-style: {{ section.settings.heading_font.style }};
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .dsgn-pck__text p {
+  color: {{ section.settings.text_color }};
+  line-height: calc(3px + 2ex + 3px);
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: {{ main_font }};
+  font-weight: {{ section.settings.main_font.weight }};
+  font-style: {{ section.settings.main_font.style }};
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .dsgn-pck__button {
+  margin-top: 1.2em;
+  display: inline-block;
+  text-decoration: none;
+  padding: 0.5em 1.2em;
+  border: thin solid;
+  transition: all 0.3s;
+  border-radius: {{ section.settings.button_radius }}px;
+  line-height: calc(3px + 2ex + 3px);
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: {{ main_font }};
+  font-weight: {{ section.settings.main_font.weight }};
+  font-style: {{ section.settings.main_font.style }};
+  {%- endif -%}
+}
+
+/* Slideshow styles */
+
+#DP--{{ section.id }} .flickity-page-dots {
+  bottom: 10px;
+}
+
+#DP--{{ section.id }} .flickity-page-dots .dot {
+  background: var(--slideshow-color);
+  transition: all 0.3s ease-in-out;
+}
+
+#DP--{{ section.id }} .flickity-button {
+  background: transparent;
+  color: var(--slideshow-color);
+  transition: all 0.3s ease-in-out;
+}
+
+{%- if section.settings.slider_animation == 'fade' -%}
+  .flickity-enabled.is-fade .flickity-slider > * {
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .flickity-enabled.is-fade .flickity-slider > .is-selected {
+    pointer-events: auto;
+    z-index: 1;
+  }
+{%- endif -%}
+
+{%- if section.settings.custom_css != blank -%}
+  {%- assign custom_section_declarations = section.settings.custom_css | split: '}' -%}
+  {%- for declaration in custom_section_declarations -%}
+    {%- if declaration contains '{' -%}
+      #DP--{{ section.id }} {{ declaration }} }
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+
+  #DP--{{ section.id }} .flickity-prev-next-button.previous {
+    left: 5px;
+  }
+
+  #DP--{{ section.id }} .flickity-prev-next-button.next {
+    right: 5px;
+  }
+
+  #DP--{{ section.id }} .flickity-button-icon {
+    width: 40%;
+    height: 40%;
+    left: 0;
+  }
+
+  #DP--{{ section.id }} .next .flickity-button-icon {
+    left: auto;
+    right: 0;
+  }
+
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) {
+
+  #DP--{{ section.id }} .dsgn-pck__inner-content {
+    min-width: 100%;
+  }
+
+  #DP--{{ section.id }} {
+    margin-top: {{ section.settings.outer_margin_top | divided_by: 2 }}px;
+    margin-bottom: {{ section.settings.outer_margin_bottom | divided_by: 2 }}px;
+  }
+
+  {%- if section.settings.mobile_custom_css != blank -%}
+    {%- assign mobile_custom_declarations = section.settings.mobile_custom_css | split: '}' -%}
+    {%- for declaration in mobile_custom_declarations -%}
+      {%- if declaration contains '{' -%}
+        #DP--{{ section.id }} {{ declaration }} }
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+}
+</style>
+
+{%- comment -%} HTML {%- endcomment -%}
+<section id="DP--{{ section.id }}" class="DP--{{ section.id }} dsgn-pck__slideshow dsgn-pck__section">
+  <div id="slideshow-{{ section.id }}">
+      {%- for block in section.blocks -%}
+        {%- comment -%} Color: check if color is set to transparent {%- endcomment -%}
+        {%- assign button_alpha = block.settings.button_background_color | color_extract: 'alpha' -%}
+
+        {% comment %} Color: check for gradient picker {% endcomment %}
+        {%- capture text_background_color -%}
+          {%- if block.settings.text_background_color contains 'gradient' -%}
+            {{ block.settings.text_background_color }}
+          {%- else -%}
+            {% unless block.settings.text_background_color contains 'rgba' %}
+              {{ block.settings.text_background_color | color_modify: 'alpha', 0.4 }}
+            {% endunless %}
+          {%- endif -%}
+        {%- endcapture -%}
+
+        {% comment %} Color: check for gradient picker {% endcomment %}
+        {%- capture background_color -%}
+          {%- if block.settings.background_color contains 'gradient' -%}
+            {{ block.settings.background_color }}
+          {%- else -%}
+            {% unless block.settings.background_color contains 'rgba' %}
+              {{ block.settings.background_color | color_modify: 'alpha', 0.6 }}
+            {% endunless %}
+          {%- endif -%}
+        {%- endcapture -%}
+
+        {%- comment -%} Images: all placeholders {%- endcomment -%}
+        {%- assign placeholder_image_id_1 = 'WPpnBH2jdFM' -%}
+        {%- assign placeholder_image_id_2 = 'pMEGruJJ6Ko' -%}
+        {%- assign placeholder_image_id_default = '-zBSu3rYjNs' -%}
+        {%- capture placeholder_image_id -%}
+          {%- case forloop.index -%}
+            {%- when 1 -%}
+              {{ placeholder_image_id_1 }}
+            {%- when 2 -%}
+              {{ placeholder_image_id_2 }}
+            {%- else -%}
+              {{ placeholder_image_id_default }}
+          {%- endcase -%}
+        {%- endcapture -%}
+
+        {%- comment -%} Images: check image crop aspect ratio {%- endcomment -%}
+        {%- if section.settings.image_crop == 'none' -%}
+          {%- assign image_crop_width = block.settings.background_image.width | default: '1600' -%}
+          {%- assign image_crop_height = block.settings.background_image.height | default: '900' -%}
+        {%- else -%}
+          {%- assign image_crop_width = section.settings.image_crop | split: ':' | first | times: 1000 -%}
+          {%- assign image_crop_height = section.settings.image_crop | split: ':' | last | times: 1000 -%}
+        {%- endif -%}
+
+        {%- assign mobile_image_crop_width = block.settings.mobile_background_image.width | default: image_crop_width -%}
+        {%- assign mobile_image_crop_height = block.settings.mobile_background_image.height | default: image_crop_height -%}
+
+        {%- comment -%} Text: check text position {%- endcomment -%}
+        {%- assign horizontal_text_position = block.settings.text_position | split: ' ' | first -%}
+        {%- assign vertical_text_position = block.settings.text_position | split: ' ' | last -%}
+        <div id="DP--{{ block.id }}" class="dsgn-pck__slide dsgn-pck__background" {{ block.shopify_attributes }} data-slideshow-index="{{ forloop.index0 }}" data-slideshow-color="{{ block.settings.text_color }}">
+          {%- if section.settings.link != blank and section.settings.button_label == blank -%}
+            <a class="dsgn-pck__absolute-link" href="{{ section.settings.link }}">{{ section.settings.link.title }}</a>
+          {% endif %}
+          <style>
+            #DP--{{ block.id }} .dsgn-pck__image__wrapper img {
+              object-position: {{ block.settings.focal_point }};
+            }
+
+            #DP--{{ block.id }} .dsgn-pck__inner-content {
+              max-width: {{ block.settings.text_width }}px;
+              color: {{ block.settings.text_color }};
+              background: {{ text_background_color }};
+              padding: {%- if block.settings.text_background_color != blank -%}clamp(10px, 5%, 40px){%- endif -%};
+            }
+
+            #DP--{{ block.id }} .dsgn-pck__button {
+              border-color: {%- if button_alpha != 0 -%}{{ block.settings.button_background_color }}{%- else -%}{{ block.settings.button_label_color }}{%- endif -%};
+              color: {{ block.settings.button_label_color }};
+              background-color: {{ block.settings.button_background_color }};
+            }
+
+            #DP--{{ block.id }} .dsgn-pck__button:hover {
+              {%- if button_alpha != 0 -%}
+              background-color: {{ block.settings.button_background_color | color_modify: 'alpha', 0.8 }};
+              border-color: transparent;
+              {%- else -%}
+              background-color: {{ block.settings.button_label_color | color_modify: 'alpha', 0.1 }}
+              {%- endif -%};
+            }
+
+            #DP--{{ block.id }} picture::after {
+              background: {{ background_color }};
+            }
+
+          </style>
+          <div class="dsgn-pck__image__wrapper">
+            <svg class="dsgn-pck__mobile--hidden" viewBox="0 0 {{ image_crop_width }} {{ image_crop_height }}"></svg>
+            <svg class="dsgn-pck__mobile--visible dsgn-pck__desktop--hidden" viewBox="0 0 {{ mobile_image_crop_width }} {{ mobile_image_crop_height }}"></svg>
+            <picture>
+            {%- if block.settings.background_image != blank -%}
+              {%- if block.settings.mobile_background_image != blank -%}
+                <source media="(max-width: 480px)" srcset="{{ block.settings.mobile_background_image | image_url: width: 960 }}">
+              {%- endif -%}
+                {{ block.settings.background_image | image_url: width: 5000 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <img src="https://cdn.shopify.com/s/files/1/0577/7673/4361/files/{{ placeholder_image_id }}.jpg"
+                  alt=""
+                  height="1600"
+                  width="900"
+                  loading="lazy">
+            {%- endif -%}
+            </picture>
+            <div class="dsgn-pck__sizer dsgn-pck__grid">
+              <div class="dsgn-pck__content dsgn-pck__flex dsgn-pck__justify-{{ horizontal_text_position }} dsgn-pck__align-{{ vertical_text_position }} dsgn-pck__text-alignment-{{ block.settings.text_alignment }}">
+                {%- if block.settings.link != blank -%}
+                  <a class="dsgn-pck__absolute-link" href="{{ block.settings.link }}">{{ block.settings.background_image.alt }}</a>
+                {% endif %}
+                <div class="dsgn-pck__inner-content dsgn-pck__relative">
+                  {%- if block.settings.preheading != blank -%}
+                    <p class="dsgn-pck__small-text dsgn-pck__rte">
+                      {{ block.settings.preheading }}
+                    </p>
+                  {%- endif -%}
+                  {%- if block.settings.title != blank -%}
+                    <h2 class="dsgn-pck__heading">
+                      {{ block.settings.title }}
+                    </h2>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="dsgn-pck__text dsgn-pck__rte">
+                      {{ block.settings.text }}
+                    </div>
+                  {%- endif -%}
+                  {%- if block.settings.button_label != blank -%}
+                    <a class="dsgn-pck__button" {%- if block.settings.link != blank -%}href="{{ block.settings.link }}"{%- endif -%}>{{ block.settings.button_label }}</a>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+  </div>
+</section>
+{%- endcapture -%}
+{{ minify | strip_newlines }}
+
+{% schema %}
+{
+  "name": "Slideshow - simple",
+  "class": "DP__slideshow-simple",
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_crop",
+      "label": "Image height",
+      "default": "1200:600",
+      "options": [
+        {
+          "label": "Original",
+          "value": "none"
+        },
+        {
+          "label": "Extra small",
+          "value": "1200:200"
+        },
+        {
+          "label": "Small",
+          "value": "1200:400"
+        },
+        {
+          "label": "Medium",
+          "value": "1200:600"
+        },
+        {
+          "label": "Large",
+          "value": "1200:800"
+        },
+        {
+          "label": "Extra large",
+          "value": "1200:1000"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "slider_animation",
+      "label": "Slideshow transition",
+      "info": "Minumum of 3 slides required to use 'Fade'",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Fade"
+        },
+        {
+          "value": "slide",
+          "label": "Slide"
+        }
+      ],
+      "default": "slide"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show navigation dots",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay",
+      "label": "Change slide every",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 8,
+      "unit": "sec",
+      "info": "Set to '0' to disable autoplay"
+    },
+    {
+      "type": "header",
+      "content": "✏️ Text appearance"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 70,
+      "max": 180,
+      "step": 5,
+      "default": 100,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "🖼 Layout"
+    },
+    {
+      "type": "text",
+      "id": "max_width",
+      "label": "Maximum width",
+      "placeholder": "eg. 1200px",
+      "info": "Sets width constraint. Prevents content from always being full width on large screens."
+    },
+    {
+      "type": "range",
+      "id": "outer_margin_top",
+      "label": "Outer margin - top",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "step": 5,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "outer_margin_bottom",
+      "label": "Outer margin - bottom",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "step": 5,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "🚨 Advanced"
+    },
+    {
+      "type": "html",
+      "id": "custom_css",
+      "label": "CSS"
+    },
+    {
+      "type": "html",
+      "id": "mobile_custom_css",
+      "label": "Mobile CSS",
+      "info": "Applied on screens less than 480px."
+    },
+    {
+      "type": "checkbox",
+      "id": "override_theme_font",
+      "label": "Override default theme font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Headings",
+      "default": "serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "main_font",
+      "label": "Text",
+      "default": "sans-serif"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "preheading",
+          "label": "Small text",
+          "default": "Small Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "New Slide"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button",
+          "default": "Learn more"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "justify",
+              "label": "Justify"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "default": "left center",
+          "options": [
+            {
+              "value": "left top",
+              "label": "Top left"
+            },
+            {
+              "value": "center top",
+              "label": "Top center"
+            },
+            {
+              "value": "right top",
+              "label": "Top right"
+            },
+            {
+              "value": "left center",
+              "label": "Left"
+            },
+            {
+              "value": "center center",
+              "label": "Center"
+            },
+            {
+              "value": "right center",
+              "label": "Right"
+            },
+            {
+              "value": "left bottom",
+              "label": "Bottom left"
+            },
+            {
+              "value": "center bottom",
+              "label": "Bottom center"
+            },
+            {
+              "value": "right bottom",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "text_width",
+          "label": "Text box width",
+          "min": 400,
+          "max": 1000,
+          "step": 10,
+          "default": 600,
+          "unit": "px"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "focal_point",
+          "label": "Image focal point",
+          "info": "Used to keep the subject of your photo in view.",
+          "default": "center center",
+          "options": [
+            {
+              "value": "20% 0",
+              "label": "Top left"
+            },
+            {
+              "value": "top center",
+              "label": "Top center"
+            },
+            {
+              "value": "80% 0",
+              "label": "Top right"
+            },
+            {
+              "value": "20% 50%",
+              "label": "Left"
+            },
+            {
+              "value": "center center",
+              "label": "Center"
+            },
+            {
+              "value": "80% 50%",
+              "label": "Right"
+            },
+            {
+              "value": "20% 100%",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "80% 100%",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "📱 Mobile"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_background_image",
+          "label": "Mobile image"
+        },
+        {
+          "type": "header",
+          "content": "🎨 Design"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color_background",
+          "id": "text_background_color",
+          "label": "Text background"
+        },
+        {
+          "type": "color",
+          "id": "button_label_color",
+          "label": "Button label",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "button_background_color",
+          "label": "Button background",
+          "default": "#283144"
+        },
+        {
+          "type": "color_background",
+          "id": "background_color",
+          "label": "Image overlay",
+          "default": "radial-gradient(rgba(0, 0, 0, 0.4) 100%, rgba(0, 0, 0, 0.4) 100%)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow - simple 🎒",
+      "settings": {
+      },
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "preheading": "Feature multiple banners",
+            "title": "Slideshow Carousel",
+            "text": "<p>Love 'em or hate 'em, sliders are handy sections to have on any e-commerce site! We recommend using 3-4 slides at most!</p>",
+            "text_color": "#FFFFFF",
+            "background_color": "radial-gradient(rgba(0, 0, 0, 0.4) 100%, rgba(0, 0, 0, 0.4) 100%)",
+            "text_width": 500
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "preheading": "Fully responsive",
+            "title": "Use different images on desktop vs mobile",
+            "text_position": "right center",
+            "text_alignment": "center",
+            "text": "<p>Switch things up depending on the device!</p>",
+            "text_color": "#000000",
+            "background_color": "radial-gradient(rgba(255, 255, 255, 0.4) 100%, rgba(255, 255, 255, 0.4) 100%)"
+          }
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{%- comment -%} JSON Settings {%- endcomment -%}
+<script type="application/json" data-dsgn-pck="{{ section.id }}">
+  {
+    "id": {{ section.id | json }},
+    "show_arrows": {{ section.settings.show_arrows | json }},
+    "show_dots": {{ section.settings.show_dots | json }},
+    "autoplay": {{ section.settings.autoplay | times: 1000 | json }},
+    "slider_animation": {%- if section.settings.slider_animation == 'fade' -%}true{%- else -%}false{%- endif -%}
+  }
+</script>
+{%- comment -%} External scripts {%- endcomment -%}
+<script data-dsgn-pck-external-js="{{ section.id }}" src="https://cdn.shopify.com/s/files/1/0577/7673/4361/files/flickity.pkgd.min.js?v=1634072170"></script>
+{%- if section.settings.slider_animation == 'fade' -%}
+  <script data-dsgn-pck-external-js="{{ section.id }}" src="https://cdn.shopify.com/s/files/1/0577/7673/4361/files/flickity-fade-1.0.0.min.js?v=1659560790"></script>
+{%- endif -%}
+{%- comment -%} JavaScript {%- endcomment -%}
+<script data-dsgn-pck-js="{{ section.id }}">
+(function(){
+
+  const designPack = {
+    settings: {},
+    goToSlide: function(index){
+      designPack.flkty.select( index, true, true )
+    },
+    load: function(section){
+
+      const elem = section.querySelector(`#slideshow-${designPack.settings.id}`);
+      designPack.flkty = new Flickity( elem, {
+        cellAlign: 'left',
+        autoPlay: this.settings.autoplay,
+        contain: true,
+        wrapAround: true,
+        adaptiveHeight: true,
+        imagesLoaded: true,
+        fade: this.settings.slider_animation,
+        prevNextButtons: this.settings.show_arrows,
+        pageDots: this.settings.show_dots,
+        on: {
+          change: function( index ) {
+            const color = this.selectedElement.dataset.slideshowColor;
+            section.style.setProperty('--slideshow-color', color);
+          }
+        }
+      });
+
+    },
+    unload: function(section){
+      designPack.flkty.destroy();
+    }
+  }
+
+  window.addEventListener('shopify:section:unload', function (e) {
+    const settings = document.querySelector(`[data-dsgn-pck="${e.detail.sectionId}"]`);
+    const sectionId = e.detail.sectionId;
+    const section = document.querySelector(`#DP--${e.detail.sectionId}`);
+    if (sectionId == designPack.settings.id){
+      designPack.unload(section);
+    }
+  });
+
+  window.addEventListener('shopify:block:select', function (e) {
+    const section = document.querySelector(`#DP--${e.detail.sectionId}`);
+    designPack.goToSlide(e.target.dataset.slideshowIndex);
+  });
+
+  designPack.settings = JSON.parse(document.querySelector('[data-dsgn-pck="{{ section.id }}"]').innerHTML);
+  const sectionId = {{ section.id | json }};
+  const section = document.querySelector(`#DP--${sectionId}`);
+
+  if (sectionId == designPack.settings.id){
+    designPack.load(section);
+  }
+})()
+</script>

@@ -1,0 +1,31 @@
+{% assign full_url = request.host | append: request.path %}
+{% assign get_fr = full_url | split: "/" %}
+
+<div class="footer__title">
+  {%- if block.settings.title == blank -%}
+   {% if block.settings.menu_fr != blank and get_fr[1] == 'fr' %}
+     {{ linklists[block.settings.menu_fr].title }}
+   {% else  %}
+     {{ linklists[block.settings.menu].title }}
+   {% endif %}
+  {%- else -%}
+    {{ block.settings.title }}
+  {%- endif -%}
+</div>
+
+<ul class="footer__menu">
+
+  {% if block.settings.menu_fr != blank and get_fr[1] == 'fr' %}
+     {%- for link in linklists[block.settings.menu_fr].links -%}
+       <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+     {%- endfor -%}
+  {% else  %}
+     {%- for link in linklists[block.settings.menu].links -%}
+       <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+     {%- endfor -%}
+  {% endif %}
+  
+   {%- if block.settings.enable_account_link -%}
+    <li><a href="{{ routes.account_url }}">{{ 'customer.account.title' | t }}</a></li>
+  {%- endif -%}
+</ul>

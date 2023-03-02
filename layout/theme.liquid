@@ -1,0 +1,289 @@
+{% comment %}ly_liquid_scripts_begin{% endcomment %}{% capture ly_liquid_content %}{% comment %}ly_liquid_scripts_end{% endcomment %}<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{% comment %}ly_dir_replace_for_[{{ settings.text_direction }}]_begin{% endcomment %}{%- assign language_code = '_' | append: request.locale.iso_code -%}{%- if '_ar_ha_he_fa_ks_ku_ps_ur_yi' contains language_code -%}{%- assign dir = 'rtl' -%}{%- else -%}{%- capture dir -%}{{ settings.text_direction }}{%- endcapture -%}{%- endif -%}{{- dir -}}{% comment %}ly_dir_replace_end{% endcomment %}">
+  <head>
+    <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TQ3PW45');</script>
+  <!-- End Google Tag Manager -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_button }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preload" as="script" href="{{ 'theme.js' | asset_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com">
+    <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
+    <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.gstatic.com">
+  
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
+    {%- endif -%}
+  
+    {%- render 'seo-title' -%}
+  
+    {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+  
+    {%- render 'social-meta-tags' -%}
+  
+    {%- if shop.enabled_currencies.size > 1 -%}
+      <link rel="stylesheet" href="{{ 'country-flags.css' | asset_url | split: '?' | first }}">
+    {%- endif -%}
+  
+    {%- render 'font-face' -%}
+    {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+    {%- render 'css-variables' -%}
+  
+    {%- liquid
+      assign enableSuperScript = false
+      unless shop.money_format contains 'money' or shop.money_format contains '.'
+        if settings.superscript_decimals
+          if shop.money_format contains '{{amount}}' or shop.money_format contains '{{ amount }}'
+            assign enableSuperScript = true
+          elsif shop.money_format contains '{{amount_with_comma_separator}}' or shop.money_format contains '{{ amount_with_comma_separator }}'
+            assign enableSuperScript = true
+          endif
+        endif
+      endunless
+    -%}
+  
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+  
+      window.theme = window.theme || {};
+      theme.routes = {
+        home: "{{ routes.root_url }}",
+        collections: "{{ routes.collections_url }}",
+        cart: "{{ routes.cart_url | append: '.js' }}",
+        cartPage: "{{ routes.cart_url }}",
+        cartAdd: "{{ routes.cart_add_url | append: '.js' }}",
+        cartChange: "{{ routes.cart_change_url | append: '.js' }}",
+        search: "{{ routes.search_url }}"
+      };
+      theme.strings = {
+        soldOut: {{ 'products.product.sold_out' | t | json }},
+        unavailable: {{ 'products.product.unavailable' | t | json }},
+        inStockLabel: {{ 'products.product.in_stock_label' | t | json }},
+        stockLabel: {{ 'products.product.stock_label' | t: count: '[count]' | json }},
+        willNotShipUntil: {{ 'products.product.will_not_ship_until' | t: date: '[date]' | json }},
+        willBeInStockAfter: {{ 'products.product.will_be_in_stock_after' | t: date: '[date]' | json }},
+        waitingForStock: {{ 'products.product.waiting_for_stock' | t | json }},
+        savePrice: {{ 'products.general.save_html' | t: saved_amount: '[saved_amount]' | json }},
+        cartEmpty: {{ 'cart.general.empty' | t | json }},
+        cartTermsConfirmation: {{ 'cart.general.terms_confirm' | t | json }},
+        searchCollections: {{ 'general.search.collections' | t | json }},
+        searchPages: {{ 'general.search.pages' | t | json }},
+        searchArticles: {{ 'general.search.articles' | t | json }}
+      };
+      theme.settings = {
+        dynamicVariantsEnable: true,
+        cartType: {{ settings.cart_type | json }},
+        isCustomerTemplate: {% if request.page_type contains 'customers/' %}true{% else %}false{% endif %},
+        moneyFormat: {{ shop.money_format | json }},
+        saveType: {{ settings.product_save_type | json }},
+        productImageSize: {{ settings.product_grid_image_size | json }},
+        productImageCover: {{ settings.product_grid_image_fill }},
+        predictiveSearch: {{ settings.predictive_search_enabled }},
+        predictiveSearchType: {{ settings.search_type | json }},
+        superScriptSetting: {{ settings.superscript_decimals }},
+        superScriptPrice: {{ enableSuperScript }},
+        quickView: {{ settings.quick_shop_enable }},
+        quickAdd: {{ settings.quick_add_enable }},
+        themeName: 'Expanse',
+        themeVersion: "3.0.0"
+      };
+    </script>
+  
+    {{ content_for_header }}
+    
+    {%- render 'bold-pr' -%}
+  {%- render 'bold-common' -%}
+  
+    <script src="{{ 'vendor-scripts-v2.js' | asset_url | split: '?' | first }}" defer="defer"></script>
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+  
+    {%- if request.page_type contains 'customers/' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+    {%- endif -%}
+  
+   <!--begin-boost-pfs-filter-css-->
+     {% render 'boost-pfs-style' %}
+   <!--end-boost-pfs-filter-css-->
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ 'custom.css' | asset_url }}"><!--RQ! added this-->
+  
+  <!-- RQ! added fix for Langify EN/FR dropdown STARTS-->  
+  {% if request.host == '/pages/club-etiket' or request.path == '/pages/club-etiket' %}
+  <meta http-equiv="Refresh" content="0; url='/pages/etiket-club'" />
+  {% endif %}
+  
+  {% if request.host contains '/fr/pages/etiket-club' or request.path contains '/fr/pages/etiket-club'  %}
+  <meta http-equiv="Refresh" content="0; url='/fr/pages/club-etiket'" />
+  {% endif %}
+  <!-- RQ! added fix for Langify EN/FR dropdown ENDS-->  
+  
+  <link rel="preload" href="{{ 'design-pack-styles.css' | asset_url }}" as="style">
+  {{ 'design-pack-styles.css' | asset_url | stylesheet_tag }} 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> <!--RQ! added this--> 
+  <script src="{{ 'custom.js' | asset_url }}" defer></script> <!--RQ! added this-->
+  {% comment %}ly_dir_styles_begin{% endcomment %}{%- assign language_code = '_' | append: request.locale.iso_code -%}{%- if '_ar_ha_he_fa_ks_ku_ps_ur_yi' contains language_code -%}{{- 'ly-rtl.css' | asset_url | stylesheet_tag -}}{%- endif -%}{% comment %}ly_dir_styles_end{% endcomment %}</head>
+  
+  <body class="template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}{% if request.path == '/challenge' %} template-challange{% endif %}" data-transitions="{{ settings.animate_page_transitions }}" data-button_style="{{ settings.button_style }}" data-edges="{{ settings.roundness }}" data-type_header_capitalize="{{ settings.type_header_capitalize }}" data-swatch_style="{{ settings.swatch_style }}" data-grid-style="{{ settings.product_grid_style }}">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TQ3PW45"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <!--RQ! code for "Book Now button checkmark option" START-->
+  {% assign full_url = request.host | append: request.path %}
+  {% if full_url contains '/fr' %}
+  <script src="https://www.booxi.com/api/booknow.js" async=""></script>
+  <script>// <![CDATA[
+        window.ga = window.ga || function() { (ga.q=ga.q||[]).push(arguments) };ga.l =+ new Date;
+  
+        var bnHandler = null;
+        window.bxApiInit = function () {
+          bnHandler = booxiController.configure({
+            apiKey: "C34F7fg6kU55mw8q3686m7B1h5b01Uzg",
+            buttonText: "Prendre rendez-vous",
+            language: "fre"
+          });
+        };
+      
+  // ]]></script>
+   {% else %}
+  <script src="https://www.booxi.com/api/booknow.js" async=""></script>
+  <script>// <![CDATA[
+        window.ga = window.ga || function() { (ga.q=ga.q||[]).push(arguments) };ga.l =+ new Date;
+  
+        var bnHandler = null;
+        window.bxApiInit = function () {
+          bnHandler = booxiController.configure({
+            apiKey: "C34F7fg6kU55mw8q3686m7B1h5b01Uzg",
+            buttonText: "BOOK NOW",
+            language: "eng"
+          });
+        };
+      
+  // ]]></script>
+      {% endif %}
+  <!--RQ! code for "Book Now button checkmark option" ENDS-->
+    
+    {% if settings.animate_page_transitions %}
+      <script type="text/javascript">window.setTimeout(function() { document.body.className += " loaded"; }, 25);</script>
+    {% endif %}
+  
+    <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+  
+    <div id="PageContainer" class="page-container">
+      <div class="transition-body">
+        {%- section 'toolbar' -%}
+        {%- section 'header' -%}      
+        {%- section 'newsletter-popup' -%}
+  
+        <main class="main-content" id="MainContent">
+          {{ content_for_layout }}
+        </main>
+  
+        {%- section 'footer-promotions' -%}
+        {%- section 'footer' -%}
+      </div>
+    </div>
+  
+    {%- liquid
+      render 'video-modal'
+      render 'photoswipe-template'
+      if settings.quick_add_enable
+        render 'quick-add-modal'
+      endif
+      render 'tool-tip'
+    -%}
+    <div id="ProductModals"></div>
+  
+   <!--begin-boost-pfs-js-->
+     {% render 'boost-pfs' %}
+   <!--end-boost-pfs-js-->
+  
+  {% include 'swymSnippet' %}
+    
+  
+  {% render 'special-offers' %}
+  
+  
+  
+  <script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/1wzILGm4YmKmF6fkedawZA" async></script>
+    
+  
+  <!--KLAVIYO ADD TO CART SCRIPT START-->
+    <script type="text/javascript">
+  var _learnq = _learnq || [];
+    var classname = document.getElementsByClassName("btn btn--full add-to-cart");
+  var addToCart = function() {
+  _learnq.push(['track', 'Added to Cart', item]);
+  }; for (var i = 0; i < classname.length; i++) {
+  classname[i].addEventListener('click', addToCart, false);
+  }
+  </script>
+    <!--KLAVIYO ADD TO CART SCRIPT END-->
+      <!--KLAVIYO NOTIFY ME SCRIPT START-->
+  <script src="https://a.klaviyo.com/media/js/onsite/onsite.js"></script>
+  <script>
+      var klaviyo = klaviyo || [];
+      klaviyo.init({
+        account: "SBetpp",
+        list: 'XE5iKb',
+        platform: "shopify",
+        exclude_on_tags: 'no_notify'
+      });
+      klaviyo.enable("backinstock",{ 
+      trigger: {
+        product_page_text: "Notify Me When Available",
+        product_page_class: "btn",
+        product_page_text_align: "center",
+        product_page_margin: "0px",
+        replace_anchor: true 
+      },
+      modal: {
+       headline: "{product_name}",
+       body_content: "Register to receive a notification when this item comes back in stock.",
+       email_field_label: "Email",
+       button_label: "Notify me when available",
+       subscription_success_label: "You're in! We'll let you know when it's back.",
+       footer_content: '',
+       additional_styles: "@import url('https://fonts.googleapis.com/css?family=dm+sans');",
+       drop_background_color: "#000",
+       background_color: "#fff",
+       text_color: "#222",
+       button_text_color: "#fff",
+       button_background_color: "#D9CCC4",
+       close_button_color: "#ccc",
+       error_background_color: "#fcd6d7",
+       error_text_color: "#C72E2F",
+       success_background_color: "#d3efcd",
+       success_text_color: "#1B9500"
+      }
+    });
+  </script>
+    <!--KLAVIYO NOTIFY ME SCRIPT END-->
+  
+  <!--GORGIAS SCRIPT START-->
+  {% if shop.locale == 'fr' %}
+  <!--Gorgias Chat Widget Start--><script id="gorgias-chat-widget-install-v2" src="https://config.gorgias.chat/gorgias-chat-bundle-loader.js?applicationId=22102"></script><!--Gorgias Chat Widget End-->
+  {% else %}
+  <!--Gorgias Chat Widget Start--><script id="gorgias-chat-widget-install-v2" src="https://config.gorgias.chat/gorgias-chat-bundle-loader.js?applicationId=22407"></script><!--Gorgias Chat Widget End-->
+  {% endif %}
+  <script id="gorgias-chat-shopify-install">!function(_){_.SHOPIFY_PERMANENT_DOMAIN="{{shop.permanent_domain}}",_.SHOPIFY_CUSTOMER_ID="{{customer.id}}",_.SHOPIFY_CUSTOMER_EMAIL="{{customer.email}}"}(window||{});</script>
+  <!--GORGIAS SCRIPT END-->
+  <!--  AOD_OrderLimit Start  --> 
+  {% include 'aodLimitValidator' %}
+   <!--  AOD_OrderLimit End  -->
+    <!-- langify-v2-scripts-begin -->{% comment %}ly_liquid_scripts_begin{% endcomment %}{% endcapture %}{% render 'ly-liquid-scripts' content: ly_liquid_content %}{% comment %}ly_liquid_scripts_end{% endcomment %}{% comment %}ly_core_scripts_begin{% endcomment %}{% render 'ly-core-scripts' %}{% comment %}ly_core_scripts_end{% endcomment %}{% comment %}ly_switcher_factory_begin{% endcomment %}{% render 'ly-switcher-factory' %}{% comment %}ly_switcher_factory_end{% endcomment %}<!-- langify-v2-scripts-end --></body>
+  </html>
+  

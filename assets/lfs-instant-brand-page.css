@@ -1,0 +1,338 @@
+/* Dont change this file as it will be overwritten during future version upgrades */
+
+/* General Settings */
+
+span.anchor{ display: block; height: 160px; /*same height as header*/ margin-top: -160px; /*same height as header*/ visibility: hidden; } 
+
+.rte a:not(.image-link)::after, .rte-setting a:not(.image-link)::after, .text-link:not(.image-link)::after {
+    border-bottom: 0px;} 
+.rte a:not(.btn) {
+    border-bottom: 0px solid currentColor;
+}
+.Rte a:not(.Button) {
+	text-decoration: none;
+}
+
+.hidden {
+  display:none;  
+}
+
+#instant-brand-page {
+  width : 100%; 
+  border : 0px; 
+  background-color: inherit;
+  display:none;
+  margin-bottom: 40px;
+}
+
+/*  A-Z index */
+
+.instant-brand-page-az{
+  text-align : center; 
+  width : 100%; 
+  border : 0px; 
+  border-collapse: collapse; 
+  font-size : 24px; 
+  margin-bottom: 24px; 
+  margin-top: 16px;
+}
+
+.instant-brand-page-az p {
+  line-height: 40px;
+  overflow-wrap: break-word;
+}
+
+/*  header */
+
+.instant-brand-header {
+  margin-top: 0px !important;
+}
+
+
+@media screen and (max-width: 500px) {
+  .instant-brand-header {
+    font-size: 1.5em;
+    text-align:center;
+  }
+}
+
+/* Slider */
+
+.instant_brand_slider {
+ 	margin-bottom: 24px; 
+}
+
+.instant-brand-slider-item-header{
+  margin-top: 12px !important;
+  margin-bottom: 6px !important;
+  
+}
+/*  Page Grid */
+
+.instant-brand-page-grid {
+ display: grid; 
+}
+
+/*  Grid Block */
+
+.instant-brand-grid-block {
+ padding: 0.5em;
+ display: grid;
+ grid-gap: 0.5rem;
+}
+
+/* Grid Listing */
+
+.instant-brand-block-listing {
+ display: grid;
+  width: 100%;
+}
+
+/* Text */
+
+.instant-brand-block-listing-text {
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
+.instant-brand-sale.text {
+  margin-left: 2px;
+}
+
+/*  img */
+
+.instant-brand-block-listing-image-wrapper img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+
+.opacity-03 {
+  opacity: 0.3;  
+}
+
+.instant-brand-sale.image {
+  z-index: 1000;
+}
+
+/*  List Template */
+
+.instant-brand-page-grid.list{
+    grid-template-columns: 1fr;
+}
+
+.instant-brand-grid-block.list .instant-brand-block-listing {
+   display: grid;
+}
+
+.instant-brand-grid-block.list{
+    border-top: 1px solid;
+    margin-bottom: 0.5em;
+  	padding-top: 1em;
+    grid-template-columns: 100px 1fr;
+  
+}
+
+.instant-brand-grid-block.list .instant-brand-block-listing-text {
+    position: relative;
+}
+
+.instant-brand-grid-block.list .instant-brand-block-listing-text a {
+    position: absolute;
+    top: 50%;
+    transform: translate(0%, -50%)  
+}
+
+@media screen and (max-width: 500px) {
+  
+  .instant-brand-grid-block.list{
+    grid-template-columns: 1fr;
+
+  }
+  
+  .instant-brand-grid-block.list .instant-brand-block-listing-text {
+    position: inherit;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+  }
+  
+  .instant-brand-grid-block.list .instant-brand-block-listing-text a {
+    position: inherit;
+    top: inherit;
+    transform: inherit;
+  }
+}
+
+/*  Horizontal Template */
+
+.instant-brand-page-grid.horizontal {
+    grid-template-columns: 1fr;
+}
+
+.instant-brand-grid-block.horizontal {
+    grid-template-columns: 100px 1fr;
+  	border-top: 1px solid;
+    margin-bottom: 0.5em;
+    padding-top: 1em;
+}
+
+
+.instant-brand-grid-block.horizontal .instant-brand-block-listing {
+  display: inline-grid; 
+  row-gap: 0.5em;
+}
+
+
+ @media screen and (max-width: 500px) {
+   
+    .instant-brand-grid-block.horizontal{
+      grid-template-columns: 1fr;
+    }
+   
+    .instant-brand-grid-block.horizontal .instant-brand-block-listing {
+      display: block;
+      margin-bottom: 0.5em;
+      
+    }
+   
+    .instant-brand-grid-block.horizontal .instant-brand-block-listing-text {
+      width: 100%;
+      text-align: center;
+      font-size: 20px;
+    }
+
+ }
+
+/*  vertical Template */
+
+.instant-brand-grid-block.vertical {
+  display: block;
+}
+
+.instant-brand-grid-block.vertical .instant-brand-block-content {
+  margin-bottom: 1em;
+}
+
+.instant-brand-grid-block.vertical .instant-brand-block-listing {
+    margin-bottom: 0.5em;
+}
+
+ @media screen and (max-width: 500px) {
+  
+    .instant-brand-grid-block.vertical .instant-brand-block-listing-text {
+        width: 100%;
+        text-align: center;
+      	font-size: 20px;
+    }
+
+}
+
+
+/*  Page Template */
+
+.instant-brand-grid-block.page {
+  display: block;
+}
+
+.instant-brand-grid-block.page .instant-brand-block-content {
+  margin-bottom: 1em;
+}
+
+.instant-brand-grid-block.page .instant-brand-block-listing {
+    margin-bottom: 0.5em;
+}
+
+.instant-brand-grid-block.page .instant-brand-sale.text  {
+  display: inline-block;
+}
+
+ @media screen and (max-width: 500px) {
+  
+    .instant-brand-grid-block.page .instant-brand-block-listing-text {
+        width: 100%;
+        text-align: center;
+      	font-size: 20px;
+    }
+
+}
+
+/* catalogue */
+
+.instant-brand-page-grid.catalogue{
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.instant-brand-page-grid.catalogue .instant-brand-block-content::before {
+    content: "";
+    display: block;
+}
+
+.instant-brand-page-grid.catalogue .instant-brand-block-listing {
+    display: grid;
+}
+
+.instant-brand-page-grid.catalogue .instant-brand-block-listing-text {
+    position: inherit;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    padding: 6px;
+}
+
+.instant-brand-page-grid.catalogue .instant-brand-block-listing::before,
+.instant-brand-page-grid.catalogue .instant-brand-block-listing {
+  grid-area: 1 / 1 / 2 / 2;
+  position: relative;
+  height: 100%;
+}
+
+  .instant-brand-grid-block.catalogue .instant-brand-sale.image  {
+  display: block;
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  width: 40px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.instant-brand-grid-block.catalogue .instant-brand-sale.text  {
+  display: inline-block;
+}
+
+.instant-brand-catalogue-text {
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+}
+
+ @media screen and (max-width: 500px) {
+  
+    .instant-brand-catalogue-text  {
+      	font-size: 20px;
+    }
+
+}
+
+/* Slider */
+
+.owl-carousel .owl-item img {
+  width:98%;
+}
+
+.owl-centered .owl-wrapper {
+  display: table !important;
+}
+.owl-centered .owl-item {
+  display: table-cell;
+  float: none;
+  vertical-align: middle;
+}
+.owl-centered .owl-item > div {
+  text-align: center;
+}

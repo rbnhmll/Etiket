@@ -1,0 +1,184 @@
+{% assign excludedbrands_array = excludedbrandlist | split: "**" %}
+{% assign customimagebrandlistformatted = customimagebrandlist | downcase | replace: " ", "_" %}
+{% assign customimagebrands_array = customimagebrandlistformatted | split: "**" %}
+{% assign notificationbrands_array = notificationbrandlist | split: "**" %}
+{% assign vendorlist="" %}
+{% assign salelist="" %}
+{% assign lastbrand = "" %}
+{% assign nocustombrand = true %}
+{% assign columnwidth = 100 | divided_by: pagecolumns %}
+{% assign numbers_array = "0,1,2,3,4,5,6,7,8,9" | split: "," %}
+
+{% assign img_number = imgwith | plus: 0  %}
+{% if img_number < 51 %}
+	{% assign img_to_small = true %}
+{% endif %}
+
+{% assign imgwith = imgwith | append: "px" %}
+{% assign mobileimgwith = "200px" %}
+{% assign fontsize = fontsize | append: "px"  %}
+       
+{% assign margintop = '10%' %}
+{% assign salebannersize = '25%' %}
+{% assign marginright = '-20%' %}
+
+{% assign text_salebannersize = fontsize | replace: 'px', '' %}
+{% assign text_salebannersize = text_salebannersize | plus: 2 %}
+{% assign text_salebannersize = text_salebannersize | append: 'px' %}
+
+      
+{% assign maxprodquery = shop.collections_count  | divided_by: 100 %}
+
+{% if maxprodquery == 0 %}
+  {% assign maxprodquery = 1000 %}
+{% else %}
+    {% assign maxprodquery = 1000  | divided_by: maxprodquery %}
+{% endif %}
+
+{% if linkofinterest %}
+  {% for link in linklists[linkofinterest].links %}
+    {% assign fullvendorlist = fullvendorlist | append: link.title | append: "/**/" %}
+  {% endfor %}
+
+  <!-- Aggregating Vendor List -->
+    {% assign my_vendor_array = fullvendorlist | split: "/**/" %}
+    {% assign my_vendor_array_sorted =  my_vendor_array | sort_natural | uniq %}
+    {% assign myvendorsize = my_vendor_array_sorted | size %}
+    {% assign my_vendor_sale_array = notificationbrands_array %}
+    {% assign my_vendor_sale_array_sorted =  my_vendor_sale_array | sort_natural | uniq %}
+
+{% else %} 
+  {% for link in linklists.instant-brand-page-redirect-menu.links %}
+    {% assign fullvendorlist = fullvendorlist | append: link.title | append: "/**/" %}
+  {% endfor %}
+
+
+  {% if collofinterest %}
+    {% for vendor in collections[collofinterest].all_vendors %}
+      {% assign fullvendorlist = fullvendorlist | append: vendor | append: "/**/" %}
+    {% endfor %}
+  {% else %}
+    {% for product_vendor in shop.vendors %}
+      {% assign fullvendorlist = fullvendorlist | append: product_vendor | append: "/**/" %}
+    {% endfor %}
+  {% endif %}
+
+
+  {% if bshowsale or outofstockvendors == false %}        
+      {% if shop.products_count > 999 %}
+
+        {% if collofinterest %}
+        <!-- collection product review -->
+                {% paginate collections[collofinterest].products by 10000 %}
+                  {% for product in collections[collofinterest].products %}
+                      {% if product.available %}
+                        {% assign instockvendorlist = instockvendorlist | append: product.vendor | append: "/**/" %}
+                      {% endif %}
+                      {% if bshowsale %}
+                        {% if product.price < product.compare_at_price_max %}
+                          {% assign salelist = salelist | append: product.vendor | append: "/**/" %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                {% endpaginate %}    
+        {% else %}
+          <!-- max product review -->
+          {% paginate collections by 10000 %}
+                      {% for collection in collections %}
+                          {% paginate collection.products by maxprodquery %}
+                            {% for product in collection.products %}
+                              {% if product.available %}
+                                {% assign instockvendorlist = instockvendorlist | append: product.vendor | append: "/**/" %}
+                              {% endif %}
+                              {% if bshowsale %}
+                                {% if product.price < product.compare_at_price_max %}
+                                    {% assign salelist = salelist | append: product.vendor | append: "/**/" %}
+                                {% endif %}
+                              {% endif %}
+                            {% endfor %}
+                          {% endpaginate %}
+                      {% endfor %}
+            {% endpaginate %}
+        {% endif %}
+      {% endif %}
+      
+    <!-- normal Product review -->
+      {% assign my_instock_vendor_array = instockvendorlist | split: "/**/" %}
+      {% assign my_full_vendor_array = fullvendorlist | split: "/**/" %}
+
+      {% for vendorname in my_full_vendor_array %}
+              {% if outofstockvendors %}
+                  {% assign vendorlist = vendorlist | append: vendorname | append: "/**/" %}
+              {% else %}
+                  {% if my_instock_vendor_array contains vendorname %}
+                      {% assign vendorlist = vendorlist | append: vendorname | append: "/**/" %}
+                  {% endif %}
+              {% endif %}      			
+      {% endfor %}
+                    
+      {% if collofinterest %}
+        {% paginate collections[collofinterest].products by 10000 %}
+            {% for product in collections[collofinterest].products %}
+            {% if outofstockvendors %}
+                {% assign vendorlist = vendorlist | append: product.vendor | append: "/**/" %}
+            {% else %}
+              {% if product.available %}
+                {% assign vendorlist = vendorlist | append: product.vendor | append: "/**/" %}
+              {% endif %}
+            {% endif %}
+            {% if bshowsale %}
+              {% if product.price < product.compare_at_price_max %}
+                  {% assign salelist = salelist | append: product.vendor | append: "/**/" %}
+              {% endif %}
+            {% endif %}
+            {% endfor %}
+        {% endpaginate %}
+      {% else %}
+          {% paginate collections.all.products by 10000 %}
+            {% for product in collections.all.products %}
+            {% if outofstockvendors %}
+                {% assign vendorlist = vendorlist | append: product.vendor | append: "/**/" %}
+            {% else %}
+              {% if product.available %}
+                {% assign vendorlist = vendorlist | append: product.vendor | append: "/**/" %}
+              {% endif %}
+            {% endif %}
+            {% if bshowsale %}
+              {% if product.price < product.compare_at_price_max %}
+                  {% assign salelist = salelist | append: product.vendor | append: "/**/" %}
+              {% endif %}
+            {% endif %}
+            {% endfor %}
+        {% endpaginate %}
+      {% endif %}
+                              
+      {% assign my_vendor_array = vendorlist | split: "/**/" %}
+      {% assign my_vendor_array_sorted =  my_vendor_array | sort_natural | uniq %}
+      {% assign my_vendor_sale_array_draft = salelist | split: "/**/" %}
+      {% assign my_vendor_sale_array = my_vendor_sale_array_draft | concat: notificationbrands_array %}
+      {% assign my_vendor_sale_array_sorted =  my_vendor_sale_array | sort_natural | uniq %}
+      {% assign myvendorsize = my_vendor_array_sorted | size %}
+        
+  {% else %}
+
+  <!-- Aggregating Vendor List -->
+    {% assign my_vendor_array = fullvendorlist | split: "/**/" %}
+    {% assign my_vendor_array_sorted =  my_vendor_array | sort_natural | uniq %}
+    {% assign myvendorsize = my_vendor_array_sorted | size %}
+    {% assign my_vendor_sale_array = notificationbrands_array %}
+    {% assign my_vendor_sale_array_sorted =  my_vendor_sale_array | sort_natural | uniq %}
+
+  {% endif %}
+{% endif %}
+
+<!-- Validate Excluded List -->
+{% for exc_brand_name in excludedbrands_array %}
+	{% if  my_vendor_array contains exc_brand_name %}
+		{% assign myexcsize = myexcsize | plus: 1 %}
+	{% endif %}
+{% endfor %}
+
+
+{% assign myTotalVendors = myvendorsize | minus: myexcsize %} 
+{% assign maxvendor = myTotalVendors | divided_by: pagecolumns | ceil %}
+{% assign maxvendor = maxvendor | plus: 1 %}

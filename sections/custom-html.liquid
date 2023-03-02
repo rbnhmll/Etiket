@@ -1,0 +1,20 @@
+{{ section.settings.custom_html }}
+
+{% schema %}
+{
+  "name": "Custom HTML",
+  "settings": [
+    {
+      "type": "html",
+      "id": "custom_html",
+      "label": "Custom HTML",
+      "default": "<div style='text-align:center;'><h2>Use HTML to format your text so it can be easily read.</h2><p>This text can be used to share information about your brand with customers.</p></div>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom HTML"
+    }
+  ]
+}
+{% endschema %}

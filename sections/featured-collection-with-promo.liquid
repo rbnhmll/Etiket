@@ -1,0 +1,173 @@
+{%- liquid
+  assign collection = collections[section.settings.home_featured_products]
+  assign product_limit = section.settings.count | plus: 1
+  if section.settings.mobile_scrollable
+    assign product_limit = section.settings.count
+  endif
+-%}
+
+{%- if section.settings.divider -%}<div class="section--divider">{%- endif -%}
+
+<div
+  id="CollectionSection-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="collection-template">
+  {%- if section.settings.title != blank -%}
+    <div class="page-width">
+      <div class="section-header{% if section.settings.view_all %} section-header--with-link{% endif %}">
+        <h2 class="section-header__title">
+          {{ section.settings.title }}
+        </h2>
+        {%- if section.settings.view_all -%}
+          <a href="{{ collections[section.settings.home_featured_products].url }}" class="section-header__link">{{ 'collections.general.all_of_collection' | t }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="page-width{% if section.settings.mobile_scrollable %} page-width--flush-small{% endif %} collection-with-promo image-{{ section.settings.image_pos }}">
+
+    <div
+      class="new-grid product-grid{% if section.settings.mobile_scrollable %} scrollable-grid--small{% endif %}"
+      data-view="{% if section.settings.promo_img != blank %}large{% else%}small{% endif %}">
+      {%- if section.settings.home_featured_products == blank or collections[section.settings.home_featured_products].empty? or collections[section.settings.home_featured_products].products_count == 0 -%}
+
+        {%- liquid
+          for i in (1..product_limit)
+            unless section.settings.mobile_scrollable
+              assign item_classes = ''
+              if forloop.index > section.settings.count
+                assign item_classes = 'hide'
+                assign mod = forloop.index | modulo: 2
+                if mod == 0
+                  assign item_classes = 'medium-up--hide'
+                endif
+              endif
+            endunless
+            render 'onboarding-product-grid-item', i: i, classes: item_classes
+          endfor
+        -%}
+
+      {%- else -%}
+
+        {%- liquid
+          for product in collections[section.settings.home_featured_products].products limit: product_limit
+            assign item_classes = ''
+            unless section.settings.mobile_scrollable
+              if forloop.index > section.settings.count
+                assign item_classes = 'hide'
+                assign mod = forloop.index | modulo: 2
+                if mod == 0
+                  assign item_classes = 'medium-up--hide'
+                endif
+              endif
+            endunless
+
+            render 'product-grid-item', product: product, collection: collection, classes: item_classes
+
+            if settings.quick_shop_enable
+              render 'quick-shop-modal', product: product
+            endif
+          endfor
+        -%}
+
+      {%- endif -%}
+    </div>
+
+    {% if section.settings.promo_img != blank %}
+      <div class="promo-banner">
+        {%- assign img_url = section.settings.promo_img | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+        <img
+          class="image-fit  lazyload"
+          src="{{ section.settings.promo_img | img_url: '300x' }}"
+          data-src="{{ img_url }}"
+          data-widths="[720, 900, 1080]"
+          data-aspectratio="{{ section.settings.promo_img.aspect_ratio }}"
+          data-sizes="auto"
+          alt="{{ section.settings.promo_img.alt | escape }}">
+        <noscript>
+          <img
+            class="image-fit lazyloaded"
+            src="{{ block.settings.image | img_url: '1800x' }}"
+            alt="{{ block.settings.image.alt }}">
+        </noscript>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{%- if section.settings.divider -%}</div>{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection with promo",
+  "class": "index-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "promo_img",
+      "label": "Promotion Banner"
+    },
+    {
+      "type": "select",
+      "id": "image_pos",
+      "label": "Image position",
+      "default": "right",
+      "options": [
+        {
+          "value": "left",
+          "label": "Image Left"
+        },
+        {
+          "value": "right",
+          "label": "Image Right"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.featured-collection.settings.title.label",
+      "default": "Featured collection"
+    },
+    {
+      "type": "collection",
+      "id": "home_featured_products",
+      "label": "t:sections.featured-collection.settings.home_featured_products.label"
+    },
+    {
+      "type": "range",
+      "id": "count",
+      "label": "t:sections.featured-collection.settings.count.label",
+      "default": 4,
+      "min": 4,
+      "max": 15,
+      "step": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_scrollable",
+      "label": "t:sections.featured-collection.settings.mobile_scrollable.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "view_all",
+      "label": "t:sections.featured-collection.settings.view_all.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "divider",
+      "label": "t:sections.featured-collection.settings.divider.label",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection with promo"
+    }
+  ],
+  "blocks": []
+}
+{% endschema %}

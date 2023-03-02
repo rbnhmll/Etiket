@@ -1,0 +1,22 @@
+{% assign desktopnav = "<p>" %}
+{% for product_vendor in my_vendor_array_sorted %}
+{% unless excludedbrands_array contains  product_vendor %}
+	{% assign startingletter =  product_vendor | slice: 0 | capitalize %}
+   	{% if consolidate_numbers and numbers_array contains startingletter  %}
+       		{% assign startingletter = consolidate_numbers_char %}
+       {% endif %}
+    {% if headerletter != startingletter %}
+      {% if index_long_link %} 
+        {% assign desktopnav = desktopnav | append: "<a class='instant-brand-letter' href=" | append: page.url | append: "#zz" | append: startingletter | append: ">" | append: startingletter | append: "</a>&nbsp;" %}
+      {% else %}
+		{% assign desktopnav = desktopnav | append: "<a class='instant-brand-letter' href=" | append: "#zz" | append: startingletter | append: ">" | append: startingletter | append: "</a>&nbsp;" %}
+  	{% endif %}
+      {% assign headerletter = startingletter %}  
+  	{% endif%}
+{% endunless%}
+{% endfor %}
+
+<div class="instant-brand-page-az {% unless display_index %} hidden {% endunless %}">
+  {% assign desktopnav = desktopnav | append: "</p>" %}
+		{{ desktopnav }}
+</div>

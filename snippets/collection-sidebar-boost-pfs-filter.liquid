@@ -1,0 +1,73 @@
+{%- liquid
+  assign show_sidebar = true
+  assign total_tags = 0
+
+  if section.settings.enable_sidebar == false 
+    assign show_sidebar = false
+  endif
+-%}
+
+{%- liquid
+  assign show_sidebar = true
+-%}
+
+{%- if show_sidebar or section.settings.enable_sort -%}
+  {%- assign location = 'CollectionSidebar' -%}
+  <div id="CollectionSidebar">
+    <div class="collection-sidebar small--hide" id="CollectionSidebarFilterWrap">
+      <div class="filter-wrapper">
+
+        <div class="boost-pfs-filter-tree boost-pfs-filter-tree-v" data-is-desktop>{% render 'boost-pfs-filter-skeleton', type: 'filter-tree' %}</div>
+
+      </div>
+    </div>
+  </div>
+
+  {%- style -%}
+    @media screen and (min-width: 769px) {
+      .collection-filter__item--drawer {
+        display: none;
+      }
+      .collection-filter__item--count {
+        text-align: left;
+      }
+      html[dir="rtl"] .collection-filter__item--count {
+        text-align: right;
+      }
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+{%- if show_sidebar == false -%}
+  {% comment %}
+    Disable sidebar & filter features
+  {% endcomment %}
+  {%- style -%}
+    .collection-content .grid__item--sidebar {
+      display: none;
+    }
+    .collection-content .grid__item--content {
+      width: 100% !important;
+    }
+    {%- if section.settings.enable_sort == false -%}
+      .collection-filter__item--drawer {
+        display: none;
+      }
+    {%- endif -%}
+    .collection-filter__item--count {
+      text-align: left;
+    }
+    html[dir="rtl"] .collection-filter__item--count {
+      text-align: right;
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+{%- unless section.settings.enable_sort -%}
+  {%- style -%}
+    .collection-filter__sort,
+    .collection-sidebar__group--sort {
+      display: none;
+    }
+  {%- endstyle -%}
+{%- endunless -%}

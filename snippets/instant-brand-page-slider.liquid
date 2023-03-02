@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+
+
+{% include 'instant-brand-page-settings' %}
+{% include 'instant-brand-page-list' %}
+
+{% assign my_favourite_vendor_array = favouritebrands | split: '**' %}
+{% assign customimagebrands_array = customimagebrandlist | split: '**' %}
+{% assign excludedbrands_array = excludedbrandlist | split: "**" %}
+
+{% if collofinterest %}
+  {% for vendor in collections[collofinterest].all_vendors %}
+	{% if my_favourite_vendor_array contains vendor %}
+    	{% assign coll_vendorlist = coll_vendorlist | append: vendor | append: "**" %}
+	{% endif %}
+  {% endfor %}
+
+	{% assign my_favourite_vendor_array = coll_vendorlist | split: '**' %}
+{% endif %}
+
+{% if linkofinterest %}
+	{% assign link_lookup = linkofinterest %}
+
+	{% for vendor in linklists[link_lookup].links %}
+		{% if my_favourite_vendor_array contains vendor.title %}
+			{% assign coll_vendorlist = coll_vendorlist | append: vendor.title | append: "**" %}
+		{% endif %}
+	{% endfor %}
+
+	{% assign my_favourite_vendor_array = coll_vendorlist | split: '**' %}
+{% endif %}
+
+{% if my_favourite_vendor_array.size > 0 %}
+
+{{ 'lfs-instant-brand-page.css' | asset_url | stylesheet_tag }}
+{{ 'lfs-instant-brand-slider-custom.css' | asset_url | stylesheet_tag }}    
+    
+
+<div id="instant_brand_slider_header" style="display: none">{{ sliderheader }}</div>
+<div id="instant_brand_slider" class="owl-carousel owl-centered">
+
+ {% for brand in my_favourite_vendor_array %}
+  		{% assign nocustombrand = true %}
+        	{% if excludedbrands_array contains brand %}
+        	{% else %}
+				{% assign dbrand = brand | downcase %}
+				{% assign brandencoded = brand | url_param_escape %}
+				{% assign brandhandle = dbrand | md5 %}
+				{% assign pagehandle =  dbrand | handleize %}
+              	{% assign vendorurl = "/collections/vendors?q=" | append: brandencoded %}
+
+				{% if customimagebrands_array contains brandhandle %}
+                    {% assign vendorimageurl = brandhandle | append: ".png" | prepend: 'ibp-' | asset_img_url : '200x' %}
+        			{% assign nocustombrand = false %}
+        		{% else %}
+        			 {% assign vendorimageurl = "ibp-no-image.png" | asset_img_url : '200x'  %}
+        		{% endif %}
+
+				{% assign bCustNavLink = false %}
+				{% if bmatchcollectionURL %}
+					{% if linkofinterest %}
+						{% assign link_lookup = linkofinterest %}
+					{% else %}
+						{% assign link_lookup = 'instant-brand-page-redirect-menu' %}
+					{% endif %}
+
+					{% for link in linklists[link_lookup].links %}
+						{% if link.title  == brand %}
+							{% assign vendorurl = link.url %}
+							{% assign bCustNavLink = true %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+
+				{% unless bCustNavLink  %}
+					{% assign collectionofinterest = collections[pagehandle] %}
+					{% if collectionofinterest.handle != '' %}
+						{% if bmatchcollectionURL %}
+							{% assign vendorurl = collectionofinterest.url %}
+						{% endif %}
+
+						{% if nocustombrand %}
+							{% if collectionofinterest.image %}
+								{% assign vendorimageurl = collectionofinterest | img_url : '200x' %}
+							{% else %}
+								{% assign vendorimageurl = collectionofinterest.products.first | img_url : '200x' %}
+							{% endif %}
+						{% endif %}
+					{% endif %}
+				{% endunless %}
+
+
+			<div style="text-align : center;">
+				<a href="{{ vendorurl }}" style="border-bottom : 0px;"><img src="{{ vendorimageurl }}" alt=" {{ brand }}" nopin="true" style="border-bottom : 0px; display: block; margin: auto; width: 50%;" /></a>
+				{% if sliderincludetext %}
+				<h5 style="border-bottom : 0px;"><a style="border-bottom : 0px;" href="{{ vendorurl }}">{{ brand }}</a></h5>
+				{% endif %}
+			</div>
+
+        	{% endif %}
+{% endfor %}
+</div>
+{% endif %}

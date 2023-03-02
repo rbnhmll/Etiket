@@ -1,0 +1,189 @@
+{%- capture bc_layout -%}
+{%- case layout -%}
+{%- when 'productGridItemHtml' -%}
+{% raw %}
+<div class="grid-item grid-product" data-product-handle="{{itemHandle}}" data-product-id="{{itemId}}">
+  <div class="grid-item__content">
+    {{itemActions}}    
+
+    <a href="{{itemUrl}}" class="grid-item__link">
+      <div class="grid-product__image-wrap">
+        <div class="grid-product__tags">
+          {{itemLabels}}
+        {{itemTagLabels}}
+        </div>
+        {{itemImages}}
+      </div>
+
+      <div class="grid-item__meta">
+        <div class="grid-item__meta-main">
+          {{itemSwatches}}
+
+          <div class="grid-product__title">{{itemTitle}}</div>
+          {{itemReviews}}
+          {{itemVendor}}
+        </div>
+        <div class="grid-item__meta-secondary">
+          {{itemPrice}}
+   <div data-fera-container="436608" data-product_id="{{itemId}}"></div>
+        </div>
+  
+      </div>
+    </a>
+  <div class="jsc-grid-items-dynamic-quantity"></div>
+  </div>
+ <div class="boost-custom-modal" data-product-id="{{itemId}}"></div>
+</div>
+{% endraw %}
+{%- when 'productListPlaceholderHtml' -%}
+{% raw %}
+<div class="boost-pfs-filter-product-item boost-pfs-filter-product-item-list {{class.filterProductSkeleton}}">
+  <div class="boost-pfs-filter-product-item-image">
+    <div class="{{class.filterProductSkeleton}}-image" style="padding-top: {{paddingTop}}%"></div>
+  </div>
+  <div class="boost-pfs-filter-product-bottom">
+    <div class="boost-pfs-filter-product-bottom-inner">
+    <a href="#" class="boost-pfs-filter-product-item-title"><span class="boost-pfs-filter-skeleton-text boost-pfs-filter-skeleton-width4"></span></a>
+    <p class="boost-pfs-filter-product-item-vendor"><span class="boost-pfs-filter-skeleton-text boost-pfs-filter-skeleton-width1"></span></p>
+    <p class="boost-pfs-filter-product-item-price"><span class="boost-pfs-filter-skeleton-text boost-pfs-filter-skeleton-width2"></span></p>
+    <p class="boost-pfs-filter-des">
+      <span class="boost-pfs-filter-skeleton-text" style="width: 100%"></span><br />
+      <span class="boost-pfs-filter-skeleton-text" style="width: 100%"></span><br />
+      <span class="boost-pfs-filter-skeleton-text" style="width: 100%"></span><br />
+      <span class="boost-pfs-filter-skeleton-text" style="width: 30%"></span>
+    </p>
+    </div>
+  </div>
+</div>
+{% endraw %}
+
+{%- when 'soldOutLabelHtml' -%}
+{% assign show_product_label_image = section.settings.show_product_label_image %}
+{% assign product_label_image_sold_out = section.settings.product_label_image_sold_out %}
+
+<span class="soldout boost-pfs-filter-label">
+{% if show_product_label_image %}
+<img src="{{ product_label_image_sold_out | img_url: 'small' }}" alt="{{ product_label_image_sold_out.alt }}" />
+{% else %}
+{{ label_soldout | default: 'Sold Out' }}
+{% endif %}
+</span>
+
+{%- when 'saleLabelHtml' -%}
+{% assign show_product_label_image = section.settings.show_product_label_image %}
+{% assign product_label_image_sale = section.settings.product_label_image_sale %}
+{% assign show_sale_percent = section.settings.show_sale_percent %}
+
+<span class="sale boost-pfs-filter-label">
+  {% if show_product_label_image %}
+  <img src="{{ product_label_image_sale | img_url: 'small' }}" alt="{{ product_label_image_sale.alt }}" />
+  {% else %}
+    {% if show_sale_percent %}
+      {% raw %}
+        {{salePercent}}
+      {% endraw %}
+    {% else %}
+    {{ label_sale | default: 'Sale' }}
+    {% endif %}
+  {% endif %}
+</span>
+
+
+{%- when 'tagLabelHtml' -%}
+{% raw %}
+<span class="tag boost-pfs-filter-label {{labelTag}}" >{{labelTag}}</span>
+{% endraw %}
+
+{%- when 'vendorHtml' -%}
+{% raw %}
+<div class="grid-product__vendor">{{itemVendorLabel}}</div>
+{% endraw %}
+
+{%- when 'previousActiveHtml' -%}
+    <span class="prev">
+      <a href="[[itemUrl]]" title="{{ 'general.pagination.previous' | t }}" class="btn btn--large btn--circle btn--icon">
+        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-chevron-left" viewBox="0 0 284.49 498.98"><path d="M249.49 0a35 35 0 0 1 24.75 59.75L84.49 249.49l189.75 189.74a35.002 35.002 0 1 1-49.5 49.5L10.25 274.24a35 35 0 0 1 0-49.5L224.74 10.25A34.89 34.89 0 0 1 249.49 0z"/></svg>
+        <span class="icon__fallback-text">{{ 'general.pagination.previous' | t }}</span>
+      </a>
+    </span>
+
+{%- when 'nextActiveHtml' -%}
+    <span class="next">
+      <a href="[[itemUrl]]" title="{{ 'general.pagination.next' | t }}" class="btn btn--large btn--circle btn--icon">
+        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-chevron-right" viewBox="0 0 284.49 498.98"><path d="M35 498.98a35 35 0 0 1-24.75-59.75l189.74-189.74L10.25 59.75a35.002 35.002 0 0 1 49.5-49.5l214.49 214.49a35 35 0 0 1 0 49.5L59.75 488.73A34.89 34.89 0 0 1 35 498.98z"/></svg>
+        <span class="icon__fallback-text">{{ 'general.pagination.next' | t }}</span>
+      </a>
+    </span>
+
+{%- when 'pageItemHtml' -%}
+	<span class="page"><a href="[[itemUrl]]">[[itemTitle]]</a></span>
+
+{%- when 'pageItemSelectedHtml' -%}
+	<span class="page current">[[itemTitle]]</span>
+
+{%- when 'pageItemRemainHtml' -%}
+	<span>[[itemTitle]]</span>
+
+{%- when 'paginateHtml' -%}
+	<div class="pagination">[[previous]][[pageItems]][[next]]</div>
+
+{%- when 'sortingHtml' -%}
+<label for="BoostSortBy" class="hidden-label">{{ 'collections.sorting.title' | t }}</label><select name="BoostSortBy" id="BoostSortBy" data-default-sortby="{{ collection.default_sort_by }}">[[sortingItems]]</select>
+
+{%- when 'sortingMobileHtml' -%}
+<div class="boost-pfs-filter-top-sorting boost-pfs-filter-option boost-pfs-filter-option-collapsed boost-pfs-filter-option-list boost-pfs-filter-option-sort boost-pfs-filter-option-column-1">
+  <div class="boost-pfs-filter-option-title">
+    <button aria-controls="boost-pfs-filter-tree3-sort" aria-label="Sort" aria-expanded="false" tabindex="0" class="boost-pfs-filter-button boost-pfs-filter-option-title-heading">
+      <span class="boost-pfs-filter-option-title-text">
+        {{ 'collections.sorting.title' | t }}       
+      </span>
+    </button>
+  </div>
+  <div class="boost-pfs-filter-option-content">
+    <div class="boost-pfs-filter-option-content-inner">
+      <ul class="boost-pfs-filter-option-item-list boost-pfs-filter-option-item-list-single-list">
+      [[sortingItems]]
+      </ul>
+    </div>
+  </div>
+</div>
+
+{%- when 'sortingMobileItemHtml' -%}
+{% raw %}
+<li class="boost-pfs-filter-option-item boost-pfs-filter-option-label {{active}}">
+  <button role="checkbox" class="boost-pfs-filter-button" data-sort="{{sort}}">
+    <span class="boost-pfs-check-box"></span>
+    <span class="boost-pfs-filter-option-value">{{label}}</span>
+    <span class="boost-pfs-filter-option-amount"></span>
+  </button>
+</li>
+{% endraw %}
+
+{%- when 'showLimitHtml' -%}
+{% raw %}
+<label> Show </label><select class="boost-pfs-filter-filter-dropdown">{{showLimitItems}}</select>
+{% endraw %}
+
+{%- when 'breadcrumbHtml' -%}
+{% raw %}
+<a href="/"> Home </a> {{breadcrumbDivider}} {{breadcrumbItems}}
+{% endraw %}
+
+{%- when 'breadcrumbDivider' -%}
+<span class="divider">/</span>
+
+{%- when 'breadcrumbItemLink' -%}
+{% raw %}
+<a href="{{itemLink}}">{{itemTitle}}</a>
+{% endraw %}
+
+{%- when 'breadcrumbItemSelected' -%}
+{% raw %}
+<span>{{itemTitle}}</span>
+{% endraw %}
+
+{%- endcase -%}
+{%- endcapture -%}
+
+{%- assign str = '}}' -%}
+{{- bc_layout | json | replace: '[[', '{{' | replace: ']]', str -}}

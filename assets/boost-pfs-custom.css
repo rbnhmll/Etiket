@@ -1,0 +1,105 @@
+/*********************** Custom CSS for Boost Filter & Search  ************************/
+
+
+
+
+/* *************************** Place your custom css below  *************************** */
+  
+/**** Custom Search result toolbar ****/
+.boost-pfs-search-result-toolbar {
+	margin: 20px 0;
+}
+
+.boost-pfs-search-result-toolbar>.boost-pfs-container-default-box,
+.boost-pfs-search-result-toolbar>.boost-pfs-container-default-fullwidth {
+	width: 100%;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+	align-items: center;
+	text-align: left;
+}
+
+@media(max-width: 767px) {
+  .search-grid  { margin-top: 20px; }
+  
+  .boost-pfs-filter-option:not(.boost-pfs-filter-option-collapsed) .boost-pfs-filter-option-content { display: block !important;}
+  .boost-pfs-filter-option.boost-pfs-filter-option-collapsed .boost-pfs-filter-option-content { display: none !important;}
+}
+
+.boost-pfs-filter-tree-mobile-button { display: none; }
+
+@media(min-width: 768px) {
+  .template-search .boost-pfs-filter-top-sorting {
+      border-right: none;
+      margin-right: 0;
+      padding-right: 0;
+  }
+  .collection-filter__item--count {
+    padding-left: 10px;
+  }
+}
+
+.boost-pfs-filter-top-sorting.boost-pfs-filter-option:not(.boost-pfs-filter-option-collapsed) .boost-pfs-filter-option-title .boost-pfs-filter-option-title-heading:after {
+    -webkit-transform: rotate(45deg) !important;
+    transform: rotate(45deg) !important;
+}
+
+@media (max-width: 1199px) {
+  .boost-pfs-action-list-enabled {
+      margin-bottom: 10px!important;
+  }
+}
+
+#QuickAddHolder .product-section:not(:first-child) {
+  display: none !important;
+}
+
+@media only screen and (min-width: 769px) {
+  .collection-sidebar {
+    padding-right: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .grid__item--sidebar {
+    top: 124px;
+  }
+}
+.boost-pfs-action-list-wrapper.boost-pfs-action-extend{
+  display:none!important;
+}
+.SearchResultsWrapper{
+  display:none!important;
+}
+.tag.boost-pfs-filter-label{
+   background-color: #E02D00;
+    color: #ffffff;
+    line-height: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 10px 1px;
+    vertical-align: top;
+    margin-left: 5px;
+    height: 21px;
+    margin-top: 6px;
+}
+
+.jsc-grid-items-dynamic-quantity{
+  margin-top:15px;
+}
+.boost-pfs-filter-products[data-view='list'] .jsc-grid-items-dynamic-quantity {
+  margin: -5px 10px 15px 0;
+  display:flex;
+  justify-content: end;
+}
+#SearchResultsWrapper{
+  display:none!important;
+}
+#header {
+  position: fixed:
+  top:0;
+}

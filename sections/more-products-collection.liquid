@@ -1,0 +1,96 @@
+{%- liquid
+  if collection
+    assign collection_handle = collection.handle
+  else
+    for col in product.collections limit: 1
+      assign collection_handle = col.handle
+    endfor
+  endif
+
+  assign collection = collections[collection_handle]
+-%}
+
+{%- if collection and collection.handle != blank -%}
+  {%- capture collection_link -%}
+    <a href="{{ collection.url }}">{{ collection.title }}</a>
+  {%- endcapture -%}
+  <div
+    data-subsection
+    data-section-id="{{ section.id }}"
+    data-section-type="collection-template">
+    <div class="index-section index-section--sub-product">
+      <div class="page-width">
+        <header class="section-header">
+          <div class="h3 section-header__title">{{ 'products.general.more_from_html' | t: link: collection_link }}</div>
+        </header>
+      </div>
+
+      <div class="page-width page-width--flush-small collection-products-promo image-{{ section.settings.image_pos }}">
+        <div class="new-grid product-grid scrollable-grid--small" data-view="{% if section.settings.promo_img != blank %}large{% else%}small{% endif %}">
+          {%- liquid
+            for product in collection.products limit: 4
+              render 'product-grid-item', product: product, collection: collection
+
+              if settings.quick_shop_enable
+                render 'quick-shop-modal', product: product, collection: collection
+              endif
+            endfor
+          -%}
+        </div>
+
+        {% if section.settings.promo_img != blank %}
+          <div class="promo-banner">
+            {%- assign img_url = section.settings.promo_img | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+            <img
+              class="image-fit lazyload"
+              src="{{ section.settings.promo_img | img_url: '300x' }}"
+              data-src="{{ img_url }}"
+              data-widths="[720, 900, 1080]"
+              data-aspectratio="{{ section.settings.promo_img.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ section.settings.promo_img.alt | escape }}">
+            <noscript>
+              <img
+                class="image-fit lazyloaded"
+                src="{{ block.settings.image | img_url: '1800x' }}"
+                alt="{{ block.settings.image.alt }}">
+            </noscript>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.more-products-collection.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "promo_img",
+      "label": "Promotion Banner"
+    },
+    {
+      "type": "select",
+      "id": "image_pos",
+      "label": "Image position",
+      "default": "right",
+      "options": [
+        {
+          "value": "left",
+          "label": "Image Left"
+        },
+        {
+          "value": "right",
+          "label": "Image Right"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.more-products-collection.settings.content"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,294 @@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<style>
+#selected_alpha li{
+  font-size: 1rem;
+}
+#selected_alpha h1{
+  font-size: 3rem;
+}
+    /* for filter */
+    #selected_alpha li{
+      font-size: 1.4rem;
+    }
+    .alphabet-search-wrapper {
+          list-style-type: none;
+          margin: 0 auto;
+          text-align: center;
+          width: 100%;
+          margin-left: unset!important;
+         }
+
+        .alphabet-search-wrapper .item-alphabet-size.active,
+        .alphabet-search-wrapper .item-alphabet-size:not(.disable):hover {
+          background: #5d6cc1;
+          color: #fff;
+        }
+
+        .alphabet-search-wrapper .item-alphabet-size {
+          background: #ffffff;
+          color: #000;
+          display: inline-block;
+          margin: 5px;
+          font-family: Poppins;
+          font-size: 14px;
+          width: 35px;
+          height: 35px;
+          border: 1px solid #e0e0e0;
+          padding: 0px 5px;
+          line-height: 33px;
+        }
+
+        .alphabet-search-wrapper .item-alphabet-size {
+          background: #ffffff;
+          color: #000;
+          display: inline-block;
+          margin: 5px;
+          font-family: Poppins;
+          font-size: 14px;
+          width: 35px;
+          height: 35px;
+          border: 1px solid #e0e0e0;
+          padding: 0px 5px;
+          line-height: 33px;
+        }
+
+        #alpha-data_body{
+            background-color: #fff;
+            box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+            height: 100%;
+            padding: 10px;
+            margin-top: 95px;
+            width: 95%;
+            margin-left: 30px;
+}
+
+        /* featured */
+        #feat-data_PAGE{
+            background-color: #fff;
+            box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+            height: 100%;
+            padding: 10px;
+            margin-top: 95px;
+            width: 95%;
+            margin-left: 30px;
+}
+            #Main_heading{
+              font-size: 32px;
+                font-weight: 600;
+                color:black;
+                margin-left: 30px;
+            }
+            #loc_heading{
+              text-align: center;
+                font-size: 27px;
+                font-weight: 600;
+                color:black;
+                margin-top: 65px;
+            }
+            #alpha_heading{
+              text-align: center;
+                font-size: 27px;
+                font-weight: 600;
+                color:black;
+                margin-top: 65px;
+            }
+        /* featured image fetch */
+        .card-title{
+          text-align: center;
+        }
+        .row{
+          display:block !important;
+        }
+        .card-deck {
+         display: flex;
+         width: 100%;
+         flex-wrap: wrap;
+                 }
+          .card-deck .card {
+          flex: 1 0 0%;
+          margin-bottom: 0;
+          
+      }
+        .img-thumbnail{
+          border: unset;
+          padding: .25rem;
+         background-color: #fff;
+         border-radius: .25rem;
+        height: auto;
+        max-width: 100%;
+         width:100%;
+        } 
+        .card-body{
+          padding: unset;
+          flex: 1 1 auto;
+          min-height: 1px;
+        }
+        .card{
+          border: unset;
+        }
+
+        li{
+          list-style: unset;
+        }
+
+       a li.filter-alpha{
+          margin-left: 70px;
+          line-height: 2;
+        }
+
+        media (min-width: 576px){
+          .card-deck {
+            display: flex;
+            margin-right: -15px;
+            margin-left: -15px;
+          }
+          .card-deck .card {
+           flex: 1 0 0%;
+            margin-right: 15px;
+            margin-bottom: 0;
+            margin-left: 15px;
+        }
+        }
+        
+        @media only screen and (min-device-width:375px) and (max-device-width:667px) and (-webkit-min-device-pixel-ratio:2){
+          #feat-data_PAGE{
+            width:unset;
+            margin-left:unset;
+          }
+          .demo_img{
+            width: 75%!impotant;
+          }
+        
+          #alpha-data_body{
+            width:unset;
+            margin-left:unset;
+          }
+          .card-title{
+            font-size: x-large;
+            margin-left: 110px;
+          }
+          .card-deck .card{
+            margin-left: 55px;
+          }
+           .card-deck {
+            display: flow-root;
+            flex-flow: row wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+            width: 100%;
+            flex-wrap: wrap;
+          }
+          .img-thumbnail{
+            width: 100%;
+          }
+        }
+        @media only screen and (max-device-width:374px) and (-webkit-min-device-pixel-ratio:2){
+          .demo_img{
+            width: 75%!important;
+          }
+          .img-thumbnail{
+            width:100%
+          }
+          #feat-data_PAGE{
+            width:unset;
+            margin-left:unset;
+          }
+       
+          #alpha-data_body{
+            width:unset;
+            margin-left:unset;
+          }
+          .card-title{
+            font-size: x-large;
+            margin-left: 85px;
+          }
+            .card-deck .card{
+            margin-left: 50px;
+          }
+           .card-deck {
+            display: flow-root;
+            flex-flow: row wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+            width: 100%;
+            flex-wrap: wrap;
+          }
+          @media only screen and (max-device-width:480px) and (-webkit-min-device-pixel-ratio:2){
+            #feat-data_PAGE{
+              width:unset;
+              margin-left:unset;
+            }
+          
+            #alpha-data_body{
+              width:unset;
+              margin-left:unset;
+            }
+            .card-title{
+              font-size: x-large;
+            } 
+            .card-deck .card{
+              margin-left: 50px;
+            }
+             .card-deck {
+              display: flow-root;
+              flex-flow: row wrap;
+              margin-right: -15px;
+              margin-left: -15px;
+            }
+          }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <div id="Main_heading" > Shop By Brands </div>
+    <div id="loc_heading" > Featured</div>
+    
+    <div id="feat-data_PAGE">
+      <div class="row" style="width: 100%;">
+  
+          <div class="card-deck" id="vendor_card_app" >
+         
+
+          </div>
+        </div>
+    </div>
+    <div id="alpha_heading" > </div>
+    <div id="alpha-data_body">
+      <div class="alphabet-search-bar">
+        <ul class="alphabet-search-wrapper">
+          <li class="item-alphabet-size active" id="letterAll" onclick="filterVendorAll()" name="letterAll">All</li>
+          <li class="item-alphabet-size"  id="A" onclick="filterVendor(this)">A</li>
+          <li class="item-alphabet-size"  id="B" onclick="filterVendor(this)">B</li>
+          <li class="item-alphabet-size"  id="C" onclick="filterVendor(this)">C</li>
+          <li class="item-alphabet-size"  id="D" onclick="filterVendor(this)">D</li>
+          <li class="item-alphabet-size"  id="E" onclick="filterVendor(this)">E</li>
+          <li class="item-alphabet-size"  id="F" onclick="filterVendor(this)">F</li>
+          <li class="item-alphabet-size"  id="G" onclick="filterVendor(this)">G</li>
+          <li class="item-alphabet-size"  id="H" onclick="filterVendor(this)">H</li>
+          <li class="item-alphabet-size"  id="I" onclick="filterVendor(this)">I</li>
+          <li class="item-alphabet-size"  id="J" onclick="filterVendor(this)">J</li>
+          <li class="item-alphabet-size"  id="K" onclick="filterVendor(this)">K</li>
+          <li class="item-alphabet-size"  id="L" onclick="filterVendor(this)">L</li>
+          <li class="item-alphabet-size"  id="M" onclick="filterVendor(this)">M</li>
+          <li class="item-alphabet-size"  id="N" onclick="filterVendor(this)">N</li>
+          <li class="item-alphabet-size"  id="O" onclick="filterVendor(this)">O</li>
+          <li class="item-alphabet-size"  id="P" onclick="filterVendor(this)">P</li>
+          <li class="item-alphabet-size" id="Q" onclick="filterVendor(this)">Q</li>
+          <li class="item-alphabet-size" id="R" onclick="filterVendor(this)">R</li>
+          <li class="item-alphabet-size" id="S" onclick="filterVendor(this)">S</li>
+          <li class="item-alphabet-size" id="T" onclick="filterVendor(this)">T</li>
+          <li class="item-alphabet-size" id="U" onclick="filterVendor(this)">U</li>
+          <li class="item-alphabet-size" id="V" onclick="filterVendor(this)">V</li>
+          <li class="item-alphabet-size" id="W" onclick="filterVendor(this)">W</li>
+          <li class="item-alphabet-size" id="letterX" onclick="filterVendor(this)">X</li>
+          <li class="item-alphabet-size" id="letterY" onclick="filterVendor(this)">Y</li>
+          <li class="item-alphabet-size" id="letterZ" onclick="filterVendor(this)">Z</li>
+        </ul>
+      </div>
+      <div id="filter_list" style=" margin-left: 15px; margin-top: 35px;">
+      <div id="selected_alpha" style="font-size: 70px;"></div>
+      </div>
+      </div>
+       
+     

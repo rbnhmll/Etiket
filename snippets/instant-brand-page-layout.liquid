@@ -1,0 +1,504 @@
+
+{% assign headerletter= "" %}
+{% assign rowcount = 0 %}
+
+{% if brandformat =="list" %}
+  {% assign columnwidth ="100" %}
+{% endif %}
+
+{% if brandformat == "horizontal" %}
+  {% assign columnwidth = columnwidth | round  | minus: 1 %}
+{% endif %}
+
+{% if brandformat == "catalogue" %}
+  {% assign imgwith ="200px" %}
+{% endif %}
+
+{% capture headerstart %}
+  <{{ headerformat }} class="instant-brand-header" style="{{ headerstyle }}">
+{% endcapture %}
+
+{% capture headerend %}
+  </{{ headerformat }}>
+{% endcapture %}
+
+{% assign columnwidth = columnwidth | append: "%" %}
+    
+
+{{ 'lfs-instant-brand-page.css' | asset_url | stylesheet_tag }}
+{{ 'lfs-instant-brand-page-custom.css' | asset_url | stylesheet_tag }}    
+
+<style>
+
+.hidden {
+	display: none !important;
+}
+
+{% unless fitbrandimage %}
+  .instant-brand-block-listing-image-wrapper img {
+    object-fit: cover;
+  }
+{% endunless %}
+
+.instant-brand-sale.text {
+  width: {{ text_salebannersize }};
+}
+
+.instant-brand-sale svg {
+  fill: {{ saleiconcolor }};
+  stroke: white;
+  stroke-width: 1px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.instant-brand-grid-block .instant-brand-block-listing-image-wrapper {
+  position: relative;
+  height: {{ imgwith }};
+  width: {{ imgwith }};
+}
+
+.instant-brand-block-listing-text {
+	font-size: {{ fontsize }} ; 
+}
+
+.instant-brand-catalogue-text {
+	font-size: {{ fontsize }} ; 
+}
+
+.instant-brand-grid-block.list .instant-brand-sale.text  {
+	display: inline-block;
+}
+
+.instant-brand-grid-block.list .instant-brand-sale.image  {
+ 	display: none;
+}
+
+.instant-brand-grid-block.horizontal .instant-brand-sale.text  {
+	display: inline-block;
+}
+
+.instant-brand-grid-block.horizontal .instant-brand-sale.image  {
+ 		display: none;
+}
+
+.instant-brand-grid-block.vertical .instant-brand-sale.text  {
+	display: inline-block;
+}
+
+  .instant-brand-grid-block.vertical .instant-brand-sale.image  {
+ 		display: none;
+
+}
+
+.instant-brand-grid-block.list .instant-brand-block-listing {
+  grid-template-columns: {{ imgwith }} 1fr;
+  column-gap: 1em;
+  margin-bottom: 1em;
+}
+
+.instant-brand-grid-block.horizontal .instant-brand-block-listing {
+  width: {{ columnwidth }};
+  margin-bottom: 0.5em;
+}
+
+.instant-brand-page-grid.vertical {
+  grid-template-columns:repeat( {{ pagecolumns }}, 1fr);
+}
+
+.instant-brand-page-grid.page {
+  grid-template-columns:repeat( {{ pagecolumns }}, 1fr);
+}
+
+
+{% if bshowimages %}
+
+  .instant-brand-grid-block.horizontal {
+    padding-top: 1em;
+  }
+
+  .instant-brand-grid-block.list .instant-brand-sale.text  {
+	{% unless img_to_small %}
+    display: none;
+	{% endunless %}
+  }
+
+
+  .instant-brand-grid-block.horizontal .instant-brand-sale.text  {
+	{% unless img_to_small %}
+    display: none;
+	{% endunless %}
+  }
+
+{% unless img_to_small and bshowtext %}
+
+  .instant-brand-grid-block.horizontal .instant-brand-sale.image  {
+    display: block;
+    position: absolute;
+    top: {{ margintop }};
+    right: {{ marginright }};
+    width: {{ salebannersize }};
+    text-align: center;
+    transform: translate(-50%, -50%);
+
+  }
+{% endunless %}
+
+  .instant-brand-grid-block.vertical .instant-brand-sale.text  {
+    {% unless img_to_small %}
+    display: none;
+	{% endunless %}
+  }
+
+{% unless img_to_small and bshowtext %}
+  .instant-brand-grid-block.vertical .instant-brand-sale.image  {
+    display: block;
+    position: absolute;
+    top: {{ margintop }};
+    right: {{ marginright }};
+    width: {{ salebannersize }};
+    text-align: center;
+    transform: translate(-50%, -50%);
+  }
+{% endunless %}
+
+  .instant-brand-grid-block.page .instant-brand-sale.text  {
+    {% unless img_to_small %}
+    display: none;
+	  {% endunless %}
+  }
+
+
+{% unless img_to_small and bshowtext %}
+  .instant-brand-grid-block.page .instant-brand-sale.image  {
+    display: block;
+    position: absolute;
+    top: {{ margintop }};
+    right: {{ marginright }};
+    width: {{ salebannersize }};
+    text-align: center;
+    transform: translate(-50%, -50%);
+  }
+{% endunless %}
+
+{% unless img_to_small and bshowtext %}
+
+    .instant-brand-grid-block.list .instant-brand-sale.image  {
+      display: block;
+      position: absolute;
+      top: {{ margintop }};
+      right: {{ marginright }};
+      width: {{ salebannersize }};
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+
+{% endunless %}
+
+ .instant-brand-page-grid.catalogue .instant-brand-block-listing-text {
+      position: inherit;
+  }
+
+{% else %} 
+
+  .instant-brand-grid-block.list .instant-brand-block-listing-text a {
+      position: unset;
+  }
+
+  .instant-brand-grid-block.list .instant-brand-block-listing {
+    grid-template-columns: 1fr;
+    column-gap: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .instant-brand-page-grid.catalogue .instant-brand-block-listing::before,
+  .instant-brand-page-grid.catalogue .instant-brand-block-listing {
+    padding-bottom: 100%;
+  }
+
+  .instant-brand-page-grid.catalogue .instant-brand-block-content {
+    border: 1px solid; 
+  }
+
+ .instant-brand-page-grid.catalogue .instant-brand-block-listing-text {
+      position: absolute;
+  }
+
+{% endif %}
+
+
+@media screen and (max-width: 500px) {
+
+ .instant-brand-page-grid {
+    grid-template-columns: 1fr !important;
+
+  }
+
+  .instant-brand-grid-block .instant-brand-block-listing-image-wrapper {
+    height: {{ mobileimgwith }};
+    width: {{ mobileimgwith }};
+    margin: auto;
+  }
+
+  .instant-brand-grid-block.horizontal .instant-brand-block-listing {
+	  width: 100%;
+  }
+
+  .instant-brand-grid-block.list .instant-brand-block-listing {
+    grid-template-columns: 1fr;
+  }
+
+ {% if bshowimages %}
+
+    .instant-brand-block-listing-text {
+      margin-top: 0.5em; 
+    }
+
+    .instant-brand-grid-block.horizontal .instant-brand-block-listing {
+      margin-bottom: 1em;
+    }
+
+    .instant-brand-grid-block.list .instant-brand-sale.text  {
+    display: none;
+    }
+
+
+    .instant-brand-grid-block.horizontal .instant-brand-sale.text  {
+    display: none;
+    }
+
+    .instant-brand-grid-block.vertical .instant-brand-sale.text  {
+    display: none;
+    }
+
+
+    .instant-brand-grid-block.list .instant-brand-sale.image  {
+      display: block;
+      position: absolute;
+      top: 15px;
+      right: -30px;
+      width: 40px;
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+
+    .instant-brand-grid-block.horizontal .instant-brand-sale.image  {
+      display: block;
+      position: absolute;
+      top: 15px;
+      right: -30px;
+      width: 40px;
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+
+    .instant-brand-grid-block.vertical .instant-brand-sale.image  {
+      display: block;
+      position: absolute;
+      top: 15px;
+      right: -30px;
+      width: 40px;
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+    
+    .instant-brand-grid-block.page .instant-brand-sale.image  {
+      display: block;
+      position: absolute;
+      top: 15px;
+      right: -30px;
+      width: 40px;
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+
+ {% endif %}
+
+}
+
+</style>
+ 
+    
+<div id="instant-brand-page">
+  {% include 'instant-brand-page-az' %}
+  	
+	 <div class="instant-brand-page-grid {{ brandformat }}">
+       {% for brand in my_vendor_array_sorted %}
+       {% if excludedbrands_array contains brand %}
+       {% else %}
+         {% assign dbrand= brand | downcase %}
+         {% assign pagehandle =  dbrand | handleize %}
+         {% assign imgbrand= dbrand | md5 %}
+
+         {% if dbrand != lastbrand %}
+           {% assign startingletter = brand | slice: 0 | capitalize %}
+           {% assign brandencoded = brand | url_param_escape %}
+           {% assign brandencoded = brandencoded | replace: '+', '%2B' %}
+           {% assign brandhandle = dbrand | replace: " ", "-" %}
+           {% assign vendorurl = "/collections/vendors?q=" | append: brandencoded %}
+
+           {% if customimagebrands_array contains imgbrand %}
+             {% assign vendorimageurl = imgbrand | append: ".png" | prepend: 'ibp-' | asset_img_url : '200x' %}
+             {% assign nocustombrand = false %}
+           {% else %}
+              {% assign vendorimageurl = "ibp-no-image.png" | asset_img_url : '200x'  %}
+           {% endif %}
+
+          {% if bshowimages or bmatchcollectionURL %}
+                  {% comment %}
+                    Adding Navlist lookup - Navlist handle must be instant-brand-page-redirect-menu
+                  {% endcomment %}
+              
+                      {% assign bCustNavLink = false %}
+                      {% if bmatchcollectionURL %}
+                        {% if linkofinterest %}
+                          {% assign link_lookup = linkofinterest %}
+                        {% else %}
+                          {% assign link_lookup = 'instant-brand-page-redirect-menu' %}
+                        {% endif %}
+
+                        {% for link in linklists[link_lookup].links %}
+                          {% assign link_title = link.title | strip | downcase %}
+                          {% if link_title  == dbrand %}
+                              {% assign vendorurl = link.url %}
+                            {% assign bCustNavLink = true %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+
+                        {% unless bCustNavLink  %}
+                          {% assign collectionofinterest = collections[pagehandle] %}
+                            {% if collectionofinterest.handle != '' %}
+                                {% if bmatchcollectionURL %}
+                                  {% assign vendorurl = collectionofinterest.url %}
+                                {% endif %}
+                                {% if nocustombrand %}
+                                    {% if collectionofinterest.image %}
+                                      {% assign vendorimageurl = collectionofinterest | img_url : '200x' %}
+                                    {% else %}
+                                        {% if collectionofinterest.products.first %}
+                                            {% assign vendorimageurl = collectionofinterest.products.first | img_url : '200x'  %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endunless%}
+                  {% endif %}
+          {% endif %}
+     
+        {% if consolidate_numbers and numbers_array contains startingletter  %}
+       		{% assign startingletter = consolidate_numbers_char %}
+       {% endif %}
+
+       {% comment %}
+         Begin the definition of the block or continuance of the content
+       {% endcomment %}  
+       
+      {% if brandformat == 'catalogue' %}
+       <div class="instant-brand-grid-block {{ brandformat }}">
+ 				{% if headerletter != startingletter %}
+         			{% assign startingbookmark = "<a name=" | append: "zz" | append: startingletter | append: ">" | append: startingletter | append: "</a>" %} 
+                 <span class="anchor">{{startingbookmark}}</span>
+				{% endif %}
+              <div class="instant-brand-block-content"> 
+                  <div class="instant-brand-block-listing"> 
+        	          <div class="instant-brand-block-listing-image-wrapper {% unless bshowimages %} hidden {% endunless %}"> 
+                      <a href="{{ vendorurl }}" class="instant-brand-item">
+                      <img src="{{ vendorimageurl }}" class="{% if vendorimageurl contains 'ibp-no-image' %}opacity-03{% endif %}" alt="{{ brand  }}" />
+                       
+                      </a>
+                      {% if my_vendor_sale_array_sorted contains brand %}<div class="instant-brand-sale image">{% include 'instant-brand-page-sale-icon' %}</div>{% endif %}
+                    </div>
+			
+             
+                <div class="instant-brand-block-listing-text {% unless bshowtext %}hidden{% endunless %}"> 
+                  <a href="{{ vendorurl }}">
+                    {{ brand }}{% if my_vendor_sale_array_sorted contains brand %}
+                    {% unless bshowimages %} 
+                    <div class="instant-brand-sale text">{% include 'instant-brand-page-sale-icon' %}</div>
+                    {% endunless %}
+                    {% endif %}
+                    </a>
+                </div>
+             
+                </div>
+              </div>
+          </div>
+
+      {% else %} 
+       
+       {% if headerletter != startingletter %}
+       	{% assign startingbookmark = "<a name=" | append: "zz" | append: startingletter | append: ">" | append: startingletter | append: "</a>" %} 
+       
+          {% if rowcount == 0 %}
+            <div class="instant-brand-grid-block {{ brandformat }}">
+               <div class="instant-brand-block-header">
+                <span>{{ headerstart }} {{startingletter}} {{ headerend }}</span>
+                 <span class="anchor">{{startingbookmark}}</span>
+              </div>
+
+              <div class="instant-brand-block-content"> 
+               {% assign rowcount = 1 %}
+          {% else %}
+                  {% if brandformat == "vertical" %}
+                    {% if vendorcount >= maxvendor %}
+                        {% assign vendorcount = 0 %}
+                      </div></div>
+                   <div class="instant-brand-grid-block {{ brandformat }}">
+
+                   <div class="instant-brand-block-header">
+                    <span>{{ headerstart }} {{startingletter}} {{ headerend }}</span>
+                     <span class="anchor">{{startingbookmark}}</span> 
+                  </div>
+                  <div class="instant-brand-block-content"> 
+
+                  {% else %}
+                    </div>
+                    <div class="instant-brand-block-header">
+                    <span>{{ headerstart }} {{startingletter}} {{ headerend }}</span>
+                     <span class="anchor">{{startingbookmark}}</span> 
+                  </div>
+                    <div class="instant-brand-block-content"> 
+                  {% endif %}
+
+                {% else %}
+                  </div></div>
+
+                  <div class="instant-brand-grid-block {{ brandformat }}">
+                   <div class="instant-brand-block-header">
+                    <span>{{ headerstart }} {{startingletter}} {{ headerend }}</span>
+                     <span class="anchor">{{startingbookmark}}</span> 
+                  </div>
+
+                  <div class="instant-brand-block-content"> 
+              {% endif %}     
+			{% endif %}
+                     
+        {% endif %}
+
+           {% assign vendorcount = vendorcount | plus: 1 %}
+            <div class="instant-brand-block-listing"> 
+        	<div class="instant-brand-block-listing-image-wrapper {% unless bshowimages %} hidden {% endunless %}"> 
+              	<a href="{{ vendorurl }}" class="instant-brand-item">
+            		<img src="{{ vendorimageurl }}"  alt="{{ brand  }}" />
+                </a>
+               {% if my_vendor_sale_array_sorted contains brand %}<div class="instant-brand-sale image">{% include 'instant-brand-page-sale-icon' %}</div>{% endif %}
+              
+            </div>
+            <div class="instant-brand-block-listing-text {% unless bshowtext %}hidden{% endunless %}"> 
+            	<a href="{{ vendorurl }}">
+            		{{ brand }}
+                  
+                   {% if my_vendor_sale_array_sorted contains brand %}<div class="instant-brand-sale text">{% include 'instant-brand-page-sale-icon' %}</div>{% endif %}
+              	</a>
+            </div>
+          </div>
+       
+       	{% assign headerletter= startingletter %}
+       {% endif %}
+	   {% assign lastbrand = dbrand %}
+     {% endif %}
+     {% assign nocustombrand = true %}
+	{% endfor %}
+	</div>
+</div>

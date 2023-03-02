@@ -1,0 +1,93 @@
+{%- paginate customer.orders by 20 -%}
+
+<div class="page-width page-content">
+  <header class="section-header section-header--with-link">
+    <h1 class="section-header__title">{{ 'customer.account.title' | t }}</h1>
+    <a href="{{ routes.account_logout_url }}" class="section-header__link">{{ 'layout.customer.log_out'| t }}</a>
+  </header>
+
+  <div class="grid">
+
+    <div class="grid__item medium-up--two-thirds">
+      <h2>{{ 'customer.orders.title' | t }}</h2>
+
+      {%- if customer.orders.size != 0 -%}
+
+        <table class="table--responsive table--small-text">
+          <thead>
+            <tr>
+              <th>{{ 'customer.orders.order_number' | t }}</th>
+              <th>{{ 'customer.orders.date' | t }}</th>
+              <th>{{ 'customer.orders.payment_status' | t }}</th>
+              <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+              <th>{{ 'customer.orders.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for order in customer.orders -%}
+              <tr class="table__section">
+                <td data-label="{{ 'customer.orders.order_number' | t }}">{{ order.name | link_to: order.customer_url }}</td>
+                <td data-label="{{ 'customer.orders.date' | t }}">{{ order.created_at | time_tag: format: 'date' }}</td>
+                <td data-label="{{ 'customer.orders.payment_status' | t }}">{{ order.financial_status_label }}</td>
+                <td data-label="{{ 'customer.orders.fulfillment_status' | t }}">{{ order.fulfillment_status_label }}</td>
+                <td data-label="{{ 'customer.orders.total' | t }}">{{ order.total_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <hr class="hr--clear">
+
+      {%- else -%}
+
+        <p>{{ 'customer.orders.none' | t }}</p>
+
+      {%- endif -%}
+    </div>
+
+    <div class="grid__item medium-up--one-third">
+      <h3>{{ 'customer.account.details' | t }}</h3>
+
+      <p class="h5">{{ customer.name }}</p>
+
+      {{ customer.default_address | format_address }}
+
+      <p><a href="{{ routes.account_addresses_url }}" class="text-link">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+    </div>
+
+  </div>
+  <br><br>
+  <!-- DJAS EMAIL SIGNUP CODE START -->
+{% if request.host contains 'fr.' or  request.host contains '/fr' or request.path contains '/fr' or request.path contains 'fr.'  %}
+  <div class="klaviyo-form-VUuh4r"></div>
+ {% else %}
+<script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/1wzILGm4YmKmF6fkedawZA" async></script><!--EN-->
+  <div class="klaviyo-form-XYzrLF"></div>
+{% endif %}
+<!-- DJAS EMAIL SIGNUP CODE END -->
+
+<!-- DJAS YOTPO CODE START -->
+{% if request.host contains 'fr.' or  request.host contains '/fr' or request.path contains '/fr' or request.path contains 'fr.'  %}
+<script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/1wzILGm4YmKmF6fkedawZA" async></script><!--FR-->
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="291151"></div>
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="291154"></div>
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="291152"></div>
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="291153"></div>
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="291155"></div>
+ {% else %}
+<script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/1wzILGm4YmKmF6fkedawZA" async></script><!--EN-->
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="249522"></div>
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="249521"></div>
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="249525"></div>
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="249523"></div>
+  <div class="yotpo-widget-instance" data-yotpo-instance-id="249524"></div>
+{% endif %}
+<!-- DJAS YOTPO CODE END -->
+  
+  {%- liquid
+    if paginate.pages > 1
+      render 'pagination', paginate: paginate
+    endif
+  -%}
+</div>
+{%- endpaginate -%}

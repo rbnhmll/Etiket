@@ -1,0 +1,78 @@
+<style>
+.rq-klaviyo-section {
+   background: {{ section.settings.background_color}};
+   color: {{ section.settings.text_color }};  
+}
+.rq-klaviyo-section h2,
+.rq-klaviyo-section p {
+   color: {{ section.settings.text_color }};  
+}
+</style>
+
+<div class="index-section rq-klaviyo-section">
+  <div class="page-width">
+      <div class="rq-title-text">
+        <h2>{{ section.settings.title }}</h2>
+        <p>{{ section.settings.text }}</p>
+      </div>
+      <div class="rq-klaviyo-forms">  
+        {% if request.host contains 'fr.' or  request.host contains '/fr' or request.path contains '/fr' or request.path contains 'fr.'  %}
+        	<p>{{ section.settings.form_embed_fr }}</p>
+        {% else %}
+        	<p>{{ section.settings.form_embed }}</p>
+        {% endif %}
+      </div>
+      <div class="rq-clear"></div>
+  </div>
+</div>
+    
+{% schema %}
+{
+  "name": "Customized Klaviyo signup",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Enjoy 10% off your first order",
+      "info": "Use <span></span> for a bigger font"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Subscribe to our Newsletter<p>"
+    },
+    {
+      "type": "text",
+      "id": "form_embed",
+      "label": "Form embed code - EN version"
+    },
+    {
+      "type": "text",
+      "id": "form_embed_fr",
+      "label": "Form embed code - FR version",
+      "info": "Your Form embed codes come from Klaviyo and they should look like <div class='klaviyo-form-XXXXXX'></div>"
+    },
+    {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#000000"
+    },
+    {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#d3d8b2",
+        "info": "Please note the color and background of the embedded forms must be modified via Klaviyo"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customized Klaviyo signup"
+    }
+  ]
+}
+{% endschema %}

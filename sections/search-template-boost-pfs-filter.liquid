@@ -1,0 +1,295 @@
+{%- paginate search.results by 20 -%}
+
+<div class="page-width page-content">
+  {%- render 'breadcrumbs' -%}
+
+  <header class="section-header">
+    <h1 class="section-header__title">
+      {{ 'general.search.title' | t }}
+    </h1>
+  </header>
+
+  <form action="{{ routes.search_url }}" method="get" class="input-group search-bar search-bar--page" role="search">
+    <input type="hidden" name="type" value="{{ settings.search_type }}">
+    <input type="search" name="q" value="{{ search.terms | escape | replace: '*', '' }}" placeholder="{{ 'general.search.placeholder' | t }}" class="input-group-field" aria-label="{{ 'general.search.placeholder' | t }}">
+    <div class="input-group-btn">
+      <button type="submit" class="btn btn--large btn--icon">
+        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-search" viewBox="0 0 64 64"><defs><style>.cls-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:2px}</style></defs><path class="cls-1" d="M47.16 28.58A18.58 18.58 0 1 1 28.58 10a18.58 18.58 0 0 1 18.58 18.58zM54 54L41.94 42"/></svg>
+        <span class="icon__fallback-text">{{ 'general.search.submit' | t }}</span>
+      </button>
+    </div>
+  </form>
+
+
+    {% comment %} SEARCH RESULT TOOLBAR {% endcomment %}
+    <div class="boost-pfs-search-result-toolbar">
+        <div class="boost-pfs-container-default-fullwidth boost-pfs-filter-default-toolbar-inner">
+            <div class="boost-pfs-search-result-item">
+                <ul class="boost-pfs-search-result-panel-controls">
+                    <li>{% render 'boost-pfs-filter-skeleton', width: 2 %}</li>
+                    <li>{% render 'boost-pfs-filter-skeleton', width: 2 %}</li>
+                    <li>{% render 'boost-pfs-filter-skeleton', width: 1 %}</li>
+                </ul>
+            </div>
+            <div class="boost-pfs-search-result-item">
+                <span class="filters-toolbar__product-count boost-pfs-search-total-result">
+                    {% render 'boost-pfs-filter-skeleton', width: 2 %}
+                </span>
+            </div>
+        </div>
+    </div>
+    {% comment %} END SEARCH RESULT TOOLBAR {% endcomment %}  
+  
+  
+    <div class="grid__item medium-up--one-fifth grid__item--sidebar boost-pfs-search-panel-product-show">
+         {% render 'collection-sidebar-boost-pfs-filter', section: section %}
+    </div>
+
+
+    <div class="grid__item medium-up--four-fifths grid__item--content boost-pfs-search-panel-product-show">
+    	<div class="collection-grid__wrapper">
+          
+          {% render 'boost-pfs-toolbar' %}
+          
+          {% unless section.settings.enable_sidebar %}      
+          <div class="boost-pfs-filter-tree boost-pfs-filter-tree-h" data-is-desktop>
+            {%- render 'boost-pfs-filter-skeleton', type: 'filter-tree-h' -%}
+          </div>
+          {% endunless %}
+          
+		  <div class="new-grid product-grid search-grid boost-pfs-filter-products" data-view="small">
+            {%- for item in search.results -%}
+              {%- if item.object_type == 'product' -%}
+                {%- liquid
+                  render 'product-grid-item', product: item
+
+                  if settings.quick_shop_enable
+                    render 'quick-shop-modal', product: item
+                  endif
+                -%}
+              {%- else -%}
+                <div class="grid-item grid-product">
+                  <div class="grid-item__content">
+                    <a href="{{ item.url }}" class="grid-item__link">
+                      {%- if item.object_type == 'article' and item.image -%}
+                        <div class="grid-product__image-wrap">
+                          {%- assign img_url = item.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                          <img class="grid-product__image lazyload"
+                              data-src="{{ img_url }}"
+                              data-widths="[180, 360, 540]"
+                              data-aspectratio="{{ item.image.aspect_ratio }}"
+                              data-sizes="auto"
+                              alt="{{ item.title | escape }}">
+                        </div>
+                      {%- endif -%}
+                      <div class="grid-item__meta">
+                        <span class="h4">{{ item.title }}</span>
+                        <div>
+                          {{ item.content | strip_html | truncatewords: 45 }}
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          
+
+          <div class="boost-pfs-filter-bottom-pagination">
+            {%- liquid
+                if paginate.pages > 1
+                  render 'pagination', paginate: paginate
+                endif
+              -%}
+          </div>
+          <div class="boost-pfs-filter-load-more"></div>
+      </div>
+  </div>
+</div>
+
+<div class="boost-pfs-filter-tree boost-pfs-filter-tree-v" data-is-mobile>{% render 'boost-pfs-filter-skeleton', type: 'filter-tree' %}</div>            
+
+<div style="clear: both;"></div>
+
+{% comment %} SEARCH RESULT: COLLECTION PANEL {% endcomment %}
+<div class="boost-pfs-search-result-wrap boost-hidden">
+	<div class="boost-pfs-search-result-collections boost-pfs-container-default-{{ layout_type }}">
+		<div class="boost-pfs-search-result-list-item"><a href="#">{% render 'boost-pfs-filter-skeleton', width: 4 %}</a></div>
+		<div class="boost-pfs-search-result-list-item"><a href="#">{% render 'boost-pfs-filter-skeleton', width: 3 %}</a></div>
+		<div class="boost-pfs-search-result-list-item"><a href="#">{% render 'boost-pfs-filter-skeleton', width: 4 %}</a></div>
+	</div>
+	<div class="boost-pfs-search-result-collection-pagination boost-pfs-filter-bottom-pagination-default">{% render 'boost-pfs-filter-skeleton', width: 4 %}</div>
+</div>
+{% comment %} END SEARCH RESULT: COLLECTIONS PANEL {% endcomment %}
+{% comment %} SEARCH RESULT: PAGES PANEL {% endcomment %}
+<div class="boost-pfs-search-result-wrap boost-hidden">
+	<div class="boost-pfs-search-result-pages boost-pfs-container-default-{{ layout_type }}">
+		<div class="boost-pfs-search-result-list-item"><a href="#">{% render 'boost-pfs-filter-skeleton', width: 4 %}</a></div>
+		<div class="boost-pfs-search-result-list-item"><a href="#">{% render 'boost-pfs-filter-skeleton', width: 3 %}</a></div>
+		<div class="boost-pfs-search-result-list-item"><a href="#">{% render 'boost-pfs-filter-skeleton', width: 4 %}</a></div>
+	</div>
+	<div class="boost-pfs-search-result-page-pagination boost-pfs-filter-bottom-pagination-default">{% render 'boost-pfs-filter-skeleton', width: 4 %}</div>
+</div>
+{% comment %} END SEARCH RESULT: PAGES PANEL {% endcomment %}
+
+{%- endpaginate -%}
+
+<script>
+// Declare boostPFSThemeConfig variable
+var boostPFSThemeConfig = {
+  label: {
+    sorting_heading: {%- assign temp = 'collections.sorting.title' | t  -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Sorting" {%- endunless -%},
+    sorting_best_selling: {%- assign temp = 'collections.sorting.best_selling' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Best Selling" {%- endunless -%},
+    sorting_featured: {%- assign temp = 'collections.sorting.featured' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Featured" {%- endunless -%},
+    sorting_manual: {%- assign temp = 'collections.sorting.manual' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Featured" {%- endunless -%},
+    sorting_title_ascending: {%- assign temp = 'collections.sorting.az' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Alphabetically, A-Z" {%- endunless -%},
+    sorting_title_descending: {%- assign temp = 'collections.sorting.za' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Alphabetically, Z-A" {%- endunless -%},
+    sorting_price_ascending: {%- assign temp = 'collections.sorting.price_ascending' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Lowest Price" {%- endunless -%},
+    sorting_price_descending: {%- assign temp = 'collections.sorting.price_descending' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Highest Price" {%- endunless -%},
+    sorting_created_ascending: {%- assign temp = 'collections.sorting.created_ascending' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Date, Old to New" {%- endunless -%},
+    sorting_created_descending: {%- assign temp = 'collections.sorting.created_descending' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Date, New to Old" {%- endunless -%},
+    sorting_date_ascending: {%- assign temp = 'collections.sorting.date_ascending' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Date, Old to New" {%- endunless -%},
+    sorting_date_descending: {%- assign temp = 'collections.sorting.date_descending' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Date, New to Old" {%- endunless -%},
+    sorting_sale_descending: {%- assign temp = 'collections.sorting.sale_descending' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "% Off" {%- endunless -%},
+    sorting_relevance: {%- assign temp = 'collections.sorting.relevance' | t -%} {%- unless temp contains 'translation missing'  -%} "{{ temp }}" {%- else -%} "Relevance" {%- endunless -%},
+    items_with_count_one: "{{ label_items_with_count_one | default: 'Product' }}",
+    items_with_count_other: "{{ label_items_with_count_other | default: 'Products' }}",
+    quick_shop: {{ 'products.general.quick_shop' | t | json }},
+    add_to_cart: {{ 'products.product.add_to_cart' | t | json }},
+    sale: {{ 'products.general.sale' | t |default: 'Sale' | json }},
+    sold_out: {{ 'products.product.sold_out' | t |default: 'Sold out' | json }},    
+    from: {{ 'products.general.from_text_html' | t | json }},
+    sale_price: {{ 'products.general.sale_price' | t |default: 'Sale' | json }},    
+    save_html: {{ 'products.general.save_html' | t | json }},
+    regular_price: {{ 'products.general.regular_price' | t | json }},
+  },
+  custom: {
+    products_per_page: 20,
+    quick_add_enable: {{ settings.quick_add_enable | json }},
+    quick_shop_enable: {{ settings.quick_shop_enable | json }},
+    vendor_enable: {{ settings.vendor_enable | json }},
+    product_grid_image_size: {{ settings.product_grid_image_size | json }},
+    product_grid_image_fill: {{ settings.product_grid_image_fill | json }},
+    product_hover_image: {{ settings.product_hover_image | json }},
+    enable_swatches: {{ settings.enable_color_swatches | json }},
+    color_variant_name: {{ 'products.general.color_swatch_trigger' | t | default: 'color' | downcase | json }},
+    superscript_decimals : {{ settings.superscript_decimals | json }},
+    product_save_amount: {{ settings.product_save_amount | json }},
+    product_save_type: {{ settings.product_save_type | json }},
+  }
+};
+
+// Declare Templates
+var boostPFSTemplate = {
+  'soldOutClass': ' sold-out',
+  'saleClass': ' on-sale',
+  'soldOutLabelHtml': {%- render 'boost-pfs-filter-html', layout: 'soldOutLabelHtml', label_soldout: label_soldout -%},
+  'saleLabelHtml': {%- render 'boost-pfs-filter-html', layout: 'saleLabelHtml', label_sale: label_sale -%},
+  'tagLabelHtml': {%- render 'boost-pfs-filter-html', layout: 'tagLabelHtml' -%},
+  'vendorHtml': {%- render 'boost-pfs-filter-html', layout: 'vendorHtml' -%},
+  // Grid Template
+  'productGridItemHtml': {%- render 'boost-pfs-filter-html', layout: 'productGridItemHtml' -%},
+  // For List View
+  // List Template
+  'productListItemHtml': {%- render 'boost-pfs-filter-html', layout: 'productListItemHtml' -%},
+  // End For List View
+  'productListPlaceholderHtml': {%- render 'boost-pfs-filter-html', layout: 'productListPlaceholderHtml' -%},
+  // Pagination Template
+  'previousActiveHtml': {%- render 'boost-pfs-filter-html', layout: 'previousActiveHtml' -%},
+  'previousDisabledHtml': {%- render 'boost-pfs-filter-html', layout: 'previousDisabledHtml' -%},
+  'nextActiveHtml': {%- render 'boost-pfs-filter-html', layout: 'nextActiveHtml' -%},
+  'nextDisabledHtml': {%- render 'boost-pfs-filter-html', layout: 'nextDisabledHtml' -%},
+  'pageItemHtml': {%- render 'boost-pfs-filter-html', layout: 'pageItemHtml' -%},
+  'pageItemSelectedHtml': {%- render 'boost-pfs-filter-html', layout: 'pageItemSelectedHtml' -%},
+  'pageItemRemainHtml': {%- render 'boost-pfs-filter-html', layout: 'pageItemRemainHtml' -%},
+  'paginateHtml': {%- render 'boost-pfs-filter-html', layout: 'paginateHtml' -%},
+  // Sorting Template
+  'sortingHtml': {%- render 'boost-pfs-filter-html', layout: 'sortingHtml' -%},
+  'sortingMobileHtml': {%- render 'boost-pfs-filter-html', layout: 'sortingMobileHtml' -%},
+  'sortingMobileItemHtml': {%- render 'boost-pfs-filter-html', layout: 'sortingMobileItemHtml' -%},    
+  // Show Limit Template
+  'showLimitHtml': {%- render 'boost-pfs-filter-html', layout: 'showLimitHtml' -%},
+  // Breadcrumb Template
+  'breadcrumbHtml': {%- render 'boost-pfs-filter-html', layout: 'breadcrumbHtml' -%},
+  'breadcrumbDivider': {%- render 'boost-pfs-filter-html', layout: 'breadcrumbDivider' -%},
+  'breadcrumbItemLink': {%- render 'boost-pfs-filter-html', layout: 'breadcrumbItemLink' -%},
+  'breadcrumbItemSelected': {%- render 'boost-pfs-filter-html', layout: 'breadcrumbItemSelected' -%},
+};
+</script>
+
+{% schema %}
+  {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Filtering and sorting"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_sidebar",
+        "label": "Vertical Filter",
+        "default": true,
+        "info": "Enable Boost Vertical Filter"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_color_swatches",
+        "label": "Enable color swatches",
+        "info": "[View setup instructions](https://archetypethemes.co/blogs/expanse/how-do-i-set-up-color-swatches)"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_sort",
+        "label": "Show sort options",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection_description",
+        "name": "Collection description",
+        "limit": 1
+      },
+      {
+        "type": "product_grid",
+        "name": "Products",
+        "settings": [
+          {
+            "type": "select",
+            "id": "grid_style",
+            "label": "Default product layout",
+            "default": "small",
+            "options": [
+              {
+                "value": "large",
+                "label": "Large grid"
+              },
+              {
+                "value": "small",
+                "label": "Small grid"
+              },
+              {
+                "value": "list",
+                "label": "List"
+              }
+            ]
+          }
+        ],
+        "limit": 1
+      },
+      {
+        "type": "subcollections",
+        "name": "Subcollections",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "Links to collections from your menu will appear here. [Learn more](https://archetypethemes.co/blogs/expanse/how-do-i-create-subcollections)"
+          }
+        ],
+        "limit": 1
+      }
+    ]
+  }
+{% endschema %}
